@@ -45,16 +45,16 @@ func main() {
 
 	var newCol = int(col)
 
-	/*var tetrominos [7]Tetromino = { square, straight,
-	                       lShape, lShapeInverse,
-	                       tShape, skew, skewInverse}
+	var tetrominos [7]Common.Tetromino = [7]Common.Tetromino{square, straight,
+		lShape, lShapeInverse,
+		tShape, skew, skewInverse}
 
-	 /* int counter = 0;
-*/
+	var counter int = 0
+
 	var block *Common.Tetromino
 	//block = &tetrominos[counter];
 
-	block = &skew
+	block = &square
 	block.X = 4
 	block.Y = 0
 
@@ -63,16 +63,20 @@ func main() {
 
 	// game loop
 	for {
+		block = &tetrominos[counter]
 
 		block.Y = droppingRow - (block.Height - 1)
 
 		// overlapping checker
 		if droppingRow == nColsLengths[col] {
-			fmt.Println(Const.RED)
-			fmt.Println("what up bitch")
-			fmt.Println(Const.RESET)
+			/*	// debugging
+				fmt.Println(Const.RED)
+				fmt.Println("what up bitch")
+				fmt.Println(Const.RESET)
+				// debugging
+			*/
 			TF.InitLengths(&nColsLengths)
-			TF.CheckTetrisMap(&cTetrisMainMap, &bCheckList, &nColsLengths)
+			TF.CheckTetrisMap(cTetrisMainMap, &bCheckList, &nColsLengths)
 		}
 
 		/*droppingRow++
@@ -82,18 +86,19 @@ func main() {
 			cTetrisMainMap[droppingRow-1][newCol] = '.'
 		}*/
 
-		if 	droppingRow >= 0 &&
-			droppingRow <= nColsLengths[col] &&
-			bCheckList[droppingRow][col] == true {
-			/*if(counter >= 6) {
-			      counter = 0;
-			  	} else {
-			      	counter++;
-			  	}*/
-			fmt.Println(Const.RED)
-			fmt.Println("I Werk Bitch")
-			fmt.Println(Const.RESET)
-			//os.Exit(0)
+		if droppingRow >= 0 && bCheckList[droppingRow][col] == true {
+
+			if counter >= 6 {
+				counter = 0
+			} else {
+				counter++
+			}
+			/*	// debugging
+				fmt.Println(Const.RED)
+				fmt.Println("I Werk Bitch")
+				fmt.Println(Const.RESET)
+				// debugging
+			*/
 			droppingRow = 0
 			continue
 		}
@@ -103,7 +108,7 @@ func main() {
 
 		}()
 
-		time.Sleep(time.Millisecond * 300)
+		time.Sleep(time.Millisecond * 100)
 
 		// move left / right
 		if chr == 'A' || chr == 'a' {
@@ -129,12 +134,12 @@ func main() {
 		}
 
 		droppingRow++
-		if 	block.Y >= 0 &&
+		if block.Y >= 0 &&
 			droppingRow >= 0 &&
 			droppingRow <= nColsLengths[col] {
 
 			TF.DropBlockOneRow(&cTetrisMainMap, block,
-						   col, droppingRow, newCol)
+				col, droppingRow, newCol)
 		}
 
 		col = newCol
@@ -158,33 +163,52 @@ func main() {
 		Common.Clear()
 		TF.MarkDoneLines(&bCheckList, &bCompletedLines, &nLines)
 		TF.EliminateLines(&cTetrisMainMap, &bCheckList,
-							&bCompletedLines, &nColsLengths)
+			&bCompletedLines, &nColsLengths)
 		TF.UpdateTetrisMap(&cTetrisMainMap, &bCheckList)
 		Common.PrintMatrix(cTetrisMainMap)
-		fmt.Println(droppingRow, nColsLengths[col])
 
 		//// exists for debugging
-        fmt.Println("lines completed:")
-        for col := 0; col < Const.ROWS; col++ {
 
-            fmt.Printf("%v ", bCompletedLines[col])
+		/*	fmt.Printf("droppingRow: %d, colLength: %d\n", droppingRow, nColsLengths[col])
 
-        }
-        fmt.Println("\nlines lengths:")
-        for col := 0; col < Const.COLUMNS; col++ {
+			fmt.Println("lines completed:")
+			for col := 0; col < Const.ROWS; col++ {
 
-            fmt.Printf("%d ", nColsLengths[col])
+				fmt.Printf("%v ", bCompletedLines[col])
 
-        }
-        fmt.Printf("\nLine: %d", nLines)
-        //// debugging budies
+			}
+			fmt.Println("\nlines lengths:")
+			for col := 0; col < Const.COLUMNS; col++ {
+
+				fmt.Printf("%d ", nColsLengths[col])
+
+			}*/
+		fmt.Printf("\nLines: %d", nLines)
+		//// debugging budies
 
 	} // game loop
 
 }
 
 var (
-	straight Common.Tetromino = Common.Tetromino {
+	square Common.Tetromino = Common.Tetromino{
+		2,
+		2,
+		[4][2]rune{{'#', '#'},
+			{'#', '#'},
+			{'\000', '\000'},
+			{'\000', '\000'}},
+
+		[4][2]rune{{'.', '.'},
+			{'.', '.'},
+			{'\000', '\000'},
+			{'\000', '\000'}},
+		4,
+		0,
+		0,
+		0}
+
+	straight Common.Tetromino = Common.Tetromino{
 		4,
 		1,
 		[4][2]rune{{'#', '\000'},
@@ -201,7 +225,7 @@ var (
 		0,
 		0}
 
-	skew Common.Tetromino = Common.Tetromino {
+	skew Common.Tetromino = Common.Tetromino{
 		3,
 		2,
 		[4][2]rune{{'.', '#'},
@@ -216,92 +240,93 @@ var (
 		0,
 		0,
 		0}
-/*
-	lShape Common.Tetromino = Common.Tetromino {
-    	3,
-	    2,
-    	[4][2]rune{ {'#', '.'},
-      				{'#', '.'},
-      				{'#', '#'},
-      				{'\0', '\0'}},
 
-    	[4][2]rune{ {'.', '.'},
-      				{'.', '.'},
-      				{'.', '.'},
-
-		4,
-    	0,
-    	0,
-    	0}
-
-
-	lShapeInverse Common.Tetromino = Common.Tetromino {
-	   	3,
-	    2,
-	   	[4][2]rune{ {'.', '#'},
-	   				{'.', '#'},
-	  				{'#', '#'},
-	  				{'\0', '\0'}},
-
-	   	[4][2]rune{ {'.', '.'},
-	   				{'.', '.'},
-	   				{'.', '.'},
-
-		4,
-	    0,
-	    0,
-	    0}
-
-	tShape Common.Tetromino = Common.Tetromino {
-	   	3,
-	    2,
-	   	[4][2]rune{ {'#', '.'},
-	   				{'#', '#'},
-	  				{'#', '.'},
-	  				{'\0', '\0'}},
-
-	   	[4][2]rune{ {'.', '.'},
-	   				{'.', '.'},
-	   				{'.', '.'},
-
-		4,
-	    0,
-	    0,
-	    0}
-
-	skew Common.Tetromino = Common.Tetromino {
-	   	3,
-	    2,
-	   	[4][2]rune{ {'.', '#'},
-	   				{'#', '#'},
-	  				{'#', '.'},
-	  				{'\0', '\0'}},
-
-	   	[4][2]rune{ {'.', '.'},
-	   				{'.', '.'},
-	   				{'.', '.'},
-
-		4,
-	    0,
-	    0,
-	    0}
-
-	skew Common.Tetromino = Common.Tetromino {
+	lShape Common.Tetromino = Common.Tetromino{
 		3,
 		2,
-		[4][2]rune{ {'#', '.'},
-					{'#', '#'},
-					{'.', '#'},
-					{'\0', '\0'}},
+		[4][2]rune{{'#', '.'},
+			{'#', '.'},
+			{'#', '#'},
+			{'\000', '\000'}},
 
-		[4][2]rune{ {'.', '.'},
-					{'.', '.'},
-					{'.', '.'},
+		[4][2]rune{{'.', '.'},
+			{'.', '.'},
+			{'.', '.'},
+			{'\000', '\000'}},
 
 		4,
 		0,
 		0,
 		0}
-*/
 
+	lShapeInverse Common.Tetromino = Common.Tetromino{
+		3,
+		2,
+		[4][2]rune{{'.', '#'},
+			{'.', '#'},
+			{'#', '#'},
+			{'\000', '\000'}},
+
+		[4][2]rune{{'.', '.'},
+			{'.', '.'},
+			{'.', '.'},
+			{'\000', '\000'}},
+
+		4,
+		0,
+		0,
+		0}
+
+	tShape Common.Tetromino = Common.Tetromino{
+		3,
+		2,
+		[4][2]rune{{'#', '.'},
+			{'#', '#'},
+			{'#', '.'},
+			{'\000', '\000'}},
+
+		[4][2]rune{{'.', '.'},
+			{'.', '.'},
+			{'.', '.'},
+			{'\000', '\000'}},
+
+		4,
+		0,
+		0,
+		0}
+
+	/*skew Common.Tetromino = Common.Tetromino {
+	   	3,
+	    2,
+	   	[4][2]rune{ {'.', '#'},
+	   				{'#', '#'},
+	  				{'#', '.'},
+	  				{'\000', '\000'}},
+
+	   	[4][2]rune{ {'.', '.'},
+	   				{'.', '.'},
+	   				{'.', '.'}
+					{'\000', '\000'}},
+
+		4,
+	    0,
+	    0,
+	    0}
+	*/
+	skewInverse Common.Tetromino = Common.Tetromino{
+		3,
+		2,
+		[4][2]rune{{'#', '.'},
+			{'#', '#'},
+			{'.', '#'},
+			{'\000', '\000'}},
+
+		[4][2]rune{{'.', '.'},
+			{'.', '.'},
+			{'.', '.'},
+			{'\000', '\000'}},
+		4,
+		0,
+		0,
+		0}
 )

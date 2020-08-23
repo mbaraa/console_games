@@ -69,7 +69,7 @@ func UpdateTetrisMap(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 } // updateTetrisMap()
 
 // replace #s in tetris map with trues
-func CheckTetrisMap(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
+func CheckTetrisMap(tetrisMap [Const.ROWS][Const.COLUMNS]rune,
 	checkList *[Const.ROWS][Const.COLUMNS]bool,
 	lengths *[Const.COLUMNS]int) {
 
@@ -80,11 +80,11 @@ func CheckTetrisMap(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 
 		for row := 0; row < Const.ROWS; row++ {
 
-			if (*tetrisMap)[row][col] == '#' {
+			if tetrisMap[row][col] == '#' {
 
 				(*checkList)[row][col] = true
 				(*lengths)[col]--
-				//break;
+				//break
 
 			} // if
 		} // inner for
