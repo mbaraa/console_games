@@ -39,7 +39,7 @@ func main() {
 	// start dropping from the first row
 	var droppingRow int = -1
 	// dropping starts from the middle
-	var col int = Const.COLUMNS/2 - 1
+	var col int = 3
 
 	// print current tetris
 	Common.PrintMatrix(cTetrisMainMap)
@@ -80,7 +80,7 @@ func main() {
 		block.Y = droppingRow - (block.Height - 1)
 
 		// overlapping checker
-		if droppingRow == nColsLengths[col] {
+		if droppingRow >= nColsLengths[col] {
 			/*	// debugging
 				fmt.Println(Const.RED)
 				fmt.Println("what up bitch")
@@ -89,6 +89,7 @@ func main() {
 			*/
 			TF.InitLengths(&nColsLengths)
 			TF.CheckTetrisMap(cTetrisMainMap, &bCheckList, &nColsLengths)
+			//droppingRow = nColsLengths[col] - 1
 		}
 
 		/*droppingRow++
@@ -97,7 +98,6 @@ func main() {
 
 			cTetrisMainMap[droppingRow-1][newCol] = '.'
 		}*/
-
 		if droppingRow >= 0 && bCheckList[droppingRow][col] == true {
 
 			if counter >= 6 {
@@ -127,16 +127,9 @@ func main() {
 			newCol--
 		} else if chr == 'D' || chr == 'd' {
 			newCol++
+		} else if chr == 'W' || chr == 'w' {
+			block.Rotate90Degs()
 		}
-		/*else if chr == 'W' || chr == 'w' {
-		    if block->rotation >= 3 {
-		        block->rotation = 0
-		        block->rotationsCounter = 0;
-		    }
-		    else {
-		        block->rotation++;
-		    }
-		}*/
 
 		// setting boundaries
 		if newCol >= 9 {
@@ -181,20 +174,20 @@ func main() {
 
 		//// exists for debugging
 
-		/*	fmt.Printf("droppingRow: %d, colLength: %d\n", droppingRow, nColsLengths[col])
+		fmt.Printf("droppingRow: %d, colLength: %d\n", droppingRow, nColsLengths[col])
 
-			fmt.Println("lines completed:")
-			for col := 0; col < Const.ROWS; col++ {
+		/*fmt.Println("lines completed:")
+		for col := 0; col < Const.ROWS; col++ {
 
-				fmt.Printf("%v ", bCompletedLines[col])
+			fmt.Printf("%v ", bCompletedLines[col])
 
-			}
-			fmt.Println("\nlines lengths:")
-			for col := 0; col < Const.COLUMNS; col++ {
+		}*/
+		fmt.Println("\nCols lengths:")
+		for col := 0; col < Const.COLUMNS; col++ {
 
-				fmt.Printf("%d ", nColsLengths[col])
+			fmt.Printf("%d ", nColsLengths[col])
 
-			}*/
+		}
 		fmt.Printf("\nLines: %d", nLines)
 		//// debugging budies
 

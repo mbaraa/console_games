@@ -1,5 +1,7 @@
 package Types
 
+import Common "../Shared"
+
 // tetromino struct
 type Tetromino struct {
 	/*	CenterX int // center of the shape
@@ -70,6 +72,9 @@ func (tet *Tetromino) Rotate90Degs() {
 
 	}
 
+	// last but not least swapping hieght & width
+	Common.SwapInt(&tet.Height, &tet.Width)
+
 	// set the rotated shape
 	tet.Shape = newShape
 
@@ -81,9 +86,9 @@ func (_ Tetromino) CreateSquareShape() Tetromino {
 	return Tetromino{
 		2,
 		2,
-		[4][4]rune{{'.', '.', '.', '.'},
-			{'.', '#', '#', '.'},
-			{'.', '#', '#', '.'},
+		[4][4]rune{{'#', '#', '.', '.'},
+			{'#', '#', '.', '.'},
+			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 
 		[4][4]rune{{'.', '.', '.', '.'},
@@ -212,7 +217,7 @@ func (_ Tetromino) CreateLInverseShape() Tetromino {
 func (_ Tetromino) CreateTShape() Tetromino {
 
 	return Tetromino{
-		2,
+		3,
 		3,
 		[4][4]rune{{'.', '.', '.', '.'},
 			{'.', '#', '.', '.'},

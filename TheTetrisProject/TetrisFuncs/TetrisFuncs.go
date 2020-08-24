@@ -193,90 +193,14 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	block *Types.Tetromino,
 	currX, currY,
 	destX int) {
-	//int rotation) {
-
-	// pi/2 rad rotation
-
-	// swapping height and width is really reallly important trust me
-	//swap(&block->height, &block->width);
-
-	/*
-	   for(; block->rotationsCounter <= block->rotation; block->rotationsCounter++) {
-
-
-	   for(int row = 0; row < block->width; row++) {
-
-	       for(int col = 0; col < block->height; col++) {
-
-	           eqNoneTransposedShape[row][col] = block->eqNone[col][row];
-
-	       }
-	   }
-
-	   for(int row = 0; row < block->width; row++) {
-
-	       for(int col = 0; col < block->height; col++) {
-
-	           transposedShape[row][col] = block->shape[col][row];
-
-	       }
-	   }
-
-	   swap(&block->height, &block->width);
-
-	   }
-	   //int tmp = block->width;
-	   //block->width = block->height;
-	   //block->height = tmp;
-
-	   int *x = &block->x;
-	   int *y = &block->y;
-
-	   // draw equivalent empty block on the tetris map
-	   for(int shapeRow = 0; shapeRow < block -> height; shapeRow++) {
-
-	       for(int shapeCol = 0; shapeCol < block -> width; shapeCol++) {
-
-	           if(block->rotation > 0) {
-	               tetrisMap[*y + shapeRow][*x + shapeCol] = eqNoneTransposedShape[shapeRow][shapeCol];
-	           }
-
-	           else {
-	               tetrisMap[*y + shapeRow][*x + shapeCol] = block -> eqNone[shapeRow][shapeCol];
-	           }
-	       } //
-
-	   } //
-
-	   // update coordinates
-	   *x = destX;
-	   (*y)++; // drop one block
-
-	   // draw block on the tetris map
-	   for(int shapeRow = 0; shapeRow < block -> height; shapeRow++) {
-
-	       for(int shapeCol = 0; shapeCol < block->width; shapeCol++) {
-
-	           if(block->rotation > 0) {
-	               tetrisMap[*y + shapeRow][*x + shapeCol] = transposedShape[shapeRow][shapeCol];
-	           }
-	           else {
-	               tetrisMap[*y + shapeRow][*x + shapeCol] = block -> shape[shapeRow][shapeCol];
-	           }
-	       } //
-
-	   } //
-	*/
-
-	// 0 rad rotation
 
 	x := &block.X
 	y := &block.Y
 
 	// draw equivalent empty block on the tetris map
-	for shapeRow := 0; shapeRow < 4; shapeRow++ {
+	for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
 
-		for shapeCol := 0; shapeCol < 4; shapeCol++ {
+		for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
 
 			(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
 
@@ -289,15 +213,14 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	(*y)++ // drop one block
 
 	// draw block on the tetris map
-	for shapeRow := 0; shapeRow < 4; shapeRow++ {
+	for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
 
-		for shapeCol := 0; shapeCol < 4; shapeCol++ {
+		for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
 
 			(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
 
 		} //
 
 	} //
-	// 0 rad rotation
 
 } // dropBlockOneRow()

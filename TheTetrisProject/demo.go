@@ -1,4 +1,4 @@
-package main
+package foo
 
 import (
 	"fmt"
@@ -24,7 +24,7 @@ func main() {
 		T, skew, skewInverse}
 
 	var tet Types.Tetromino
-	tet = tetrominos[3]
+	tet = tetrominos[1]
 
 	fmt.Println("Original:")
 	PrintMatrix(tet.Shape)
