@@ -6,6 +6,7 @@ import (
 
 	Const "../Constants"
 	Common "../Shared"
+	"../Types"
 )
 
 // initializers:
@@ -189,7 +190,7 @@ func PrintGameOverAndGTFOH() {
 */
 
 func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
-	block *Common.Tetromino,
+	block *Types.Tetromino,
 	currX, currY,
 	destX int) {
 	//int rotation) {
@@ -273,9 +274,9 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	y := &block.Y
 
 	// draw equivalent empty block on the tetris map
-	for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
+	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
-		for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
+		for shapeCol := 0; shapeCol < 4; shapeCol++ {
 
 			(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
 
@@ -288,9 +289,9 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	(*y)++ // drop one block
 
 	// draw block on the tetris map
-	for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
+	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
-		for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
+		for shapeCol := 0; shapeCol < 4; shapeCol++ {
 
 			(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
 

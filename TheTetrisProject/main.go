@@ -7,6 +7,7 @@ import (
 	Const "./Constants"
 	Common "./Shared"
 	TF "./TetrisFuncs"
+	"./Types"
 	"github.com/eiannone/keyboard"
 )
 
@@ -45,14 +46,25 @@ func main() {
 
 	var newCol = int(col)
 
-	var tetrominos [7]Common.Tetromino = [7]Common.Tetromino{square, straight,
-		lShape, lShapeInverse,
-		tShape, skew, skewInverse}
+	var (
+		temp        Types.Tetromino
+		square      = temp.CreateSquareShape()
+		I           = temp.CreateIShape()
+		skew        = temp.CreateSkewShape()
+		skewInverse = temp.CreateSkewInverseShape()
+		L           = temp.CreateLShape()
+		LInverse    = temp.CreateLInverseShape()
+		T           = temp.CreateTShape()
+	)
+
+	var tetrominos [7]Types.Tetromino = [7]Types.Tetromino{square, I,
+		L, LInverse,
+		T, skew, skewInverse}
 
 	var counter int = 0
 
-	var block *Common.Tetromino
-	//block = &tetrominos[counter];
+	var block *Types.Tetromino
+	block = &tetrominos[counter]
 
 	block = &square
 	block.X = 4
@@ -189,144 +201,3 @@ func main() {
 	} // game loop
 
 }
-
-var (
-	square Common.Tetromino = Common.Tetromino{
-		2,
-		2,
-		[4][2]rune{{'#', '#'},
-			{'#', '#'},
-			{'\000', '\000'},
-			{'\000', '\000'}},
-
-		[4][2]rune{{'.', '.'},
-			{'.', '.'},
-			{'\000', '\000'},
-			{'\000', '\000'}},
-		4,
-		0,
-		0,
-		0}
-
-	straight Common.Tetromino = Common.Tetromino{
-		4,
-		1,
-		[4][2]rune{{'#', '\000'},
-			{'#', '\000'},
-			{'#', '\000'},
-			{'#', '\000'}},
-
-		[4][2]rune{{'.', '\000'},
-			{'.', '\000'},
-			{'.', '\000'},
-			{'.', '\000'}},
-		4,
-		0,
-		0,
-		0}
-
-	skew Common.Tetromino = Common.Tetromino{
-		3,
-		2,
-		[4][2]rune{{'.', '#'},
-			{'#', '#'},
-			{'#', '.'},
-			{'\000', '\000'}},
-		[4][2]rune{{'.', '.'},
-			{'.', '.'},
-			{'.', '.'},
-			{'\000', '\000'}},
-		4,
-		0,
-		0,
-		0}
-
-	lShape Common.Tetromino = Common.Tetromino{
-		3,
-		2,
-		[4][2]rune{{'#', '.'},
-			{'#', '.'},
-			{'#', '#'},
-			{'\000', '\000'}},
-
-		[4][2]rune{{'.', '.'},
-			{'.', '.'},
-			{'.', '.'},
-			{'\000', '\000'}},
-
-		4,
-		0,
-		0,
-		0}
-
-	lShapeInverse Common.Tetromino = Common.Tetromino{
-		3,
-		2,
-		[4][2]rune{{'.', '#'},
-			{'.', '#'},
-			{'#', '#'},
-			{'\000', '\000'}},
-
-		[4][2]rune{{'.', '.'},
-			{'.', '.'},
-			{'.', '.'},
-			{'\000', '\000'}},
-
-		4,
-		0,
-		0,
-		0}
-
-	tShape Common.Tetromino = Common.Tetromino{
-		3,
-		2,
-		[4][2]rune{{'#', '.'},
-			{'#', '#'},
-			{'#', '.'},
-			{'\000', '\000'}},
-
-		[4][2]rune{{'.', '.'},
-			{'.', '.'},
-			{'.', '.'},
-			{'\000', '\000'}},
-
-		4,
-		0,
-		0,
-		0}
-
-	/*skew Common.Tetromino = Common.Tetromino {
-	   	3,
-	    2,
-	   	[4][2]rune{ {'.', '#'},
-	   				{'#', '#'},
-	  				{'#', '.'},
-	  				{'\000', '\000'}},
-
-	   	[4][2]rune{ {'.', '.'},
-	   				{'.', '.'},
-	   				{'.', '.'}
-					{'\000', '\000'}},
-
-		4,
-	    0,
-	    0,
-	    0}
-	*/
-	skewInverse Common.Tetromino = Common.Tetromino{
-		3,
-		2,
-		[4][2]rune{{'#', '.'},
-			{'#', '#'},
-			{'.', '#'},
-			{'\000', '\000'}},
-
-		[4][2]rune{{'.', '.'},
-			{'.', '.'},
-			{'.', '.'},
-			{'\000', '\000'}},
-		4,
-		0,
-		0,
-		0}
-)

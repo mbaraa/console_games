@@ -30,21 +30,3 @@ func SwapInt(x, y *int) {
 	*y = temp
 
 }
-
-type Tetromino struct {
-	Height int // space taken on Y axis
-
-	Width int // space taken on X axis
-
-	Shape [4][2]rune // 4x2
-
-	EqNone [4][2]rune // 4x2
-
-	X int // X axis
-
-	Y int // Y axis
-
-	Rotation int // rotation * pi/2 rad
-
-	RotationsCounter int //
-}
