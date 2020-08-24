@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 	//"os"
 	Const "./Constants"
@@ -64,40 +65,35 @@ func main() {
 	var counter int = 0
 
 	var block *Types.Tetromino
-	block = &tetrominos[counter]
-
-	block = &square
-	block.X = 4
-	block.Y = 0
 
 	var chr rune
+
 	//var key keyboard.Key
 
-	// game loop
+	/*	go func() {
+			for {
+				chr, _, _ = keyboard.GetSingleKey()
+			}
+		}()
+	*/block = &tetrominos[2]
+	block.Rotate90Degs()
+
+	///////////////////////////////////////////////////////////////////////////
+	///////////////////////// game loop //////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////
+
 	for {
-		block = &tetrominos[counter]
 
 		block.Y = droppingRow - (block.Height - 1)
 
 		// overlapping checker
 		if droppingRow >= nColsLengths[col] {
-			/*	// debugging
-				fmt.Println(Const.RED)
-				fmt.Println("what up bitch")
-				fmt.Println(Const.RESET)
-				// debugging
-			*/
+			//droppingRow = nColsLengths[col] // - 1
+
 			TF.InitLengths(&nColsLengths)
 			TF.CheckTetrisMap(cTetrisMainMap, &bCheckList, &nColsLengths)
-			//droppingRow = nColsLengths[col] - 1
 		}
 
-		/*droppingRow++
-		// replace dropped character with a dot
-		if droppingRow < nColsLengths[newCol] && droppingRow > 0 {
-
-			cTetrisMainMap[droppingRow-1][newCol] = '.'
-		}*/
 		if droppingRow >= 0 && bCheckList[droppingRow][col] == true {
 
 			if counter >= 6 {
@@ -105,17 +101,13 @@ func main() {
 			} else {
 				counter++
 			}
-			/*	// debugging
-				fmt.Println(Const.RED)
-				fmt.Println("I Werk Bitch")
-				fmt.Println(Const.RESET)
-				// debugging
-			*/
+
 			droppingRow = 0
 			continue
 		}
 
 		go func() {
+
 			chr, _, _ = keyboard.GetSingleKey()
 
 		}()
@@ -129,6 +121,9 @@ func main() {
 			newCol++
 		} else if chr == 'W' || chr == 'w' {
 			block.Rotate90Degs()
+
+		} else if chr == 'q' {
+			os.Exit(0)
 		}
 
 		// setting boundaries
@@ -149,21 +144,10 @@ func main() {
 
 		col = newCol
 
-		// overlapping checker
-		/*if( droppingRow == nColsLengths[col]) {
-		    initLengths(colsLengths);
-		    checkTetrisMap(tetrisMainMap, checkList, colsLengths);
-		}*/
-
+		////////////
 		/*if( tetrisMainMap[0][col] == '#' && tetrisMainMap[1][col] == '#') {
 		    printGameOverAndGTFOH();
 		}*/
-
-		/*if droppingRow < nColsLengths[newCol] {
-			cTetrisMainMap[droppingRow][newCol] = '#'
-		}*/
-
-		//fmt.Printf("rune: %v key: %v \n", chr, key)
 
 		Common.Clear()
 		TF.MarkDoneLines(&bCheckList, &bCompletedLines, &nLines)

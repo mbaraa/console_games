@@ -185,10 +185,6 @@ func PrintGameOverAndGTFOH() {
 
 } // printGameOverAndGTFOH()
 
-/*transposedShape[2][3];
-  char eqNoneTransposedShape[2][3];
-*/
-
 func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	block *Types.Tetromino,
 	currX, currY,
@@ -198,12 +194,13 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	y := &block.Y
 
 	// draw equivalent empty block on the tetris map
-	for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
+	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
-		for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
+		for shapeCol := 0; shapeCol < 4; shapeCol++ {
+			if *y+shapeRow < Const.ROWS && *x+shapeCol < Const.COLUMNS {
 
-			(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
-
+				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
+			}
 		} //
 
 	} //
@@ -213,14 +210,40 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	(*y)++ // drop one block
 
 	// draw block on the tetris map
-	for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
+	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
-		for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
-
-			(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
-
+		for shapeCol := 0; shapeCol < 4; shapeCol++ {
+			if Const.ROWS > (*y+shapeRow) && Const.COLUMNS > (*x+shapeCol) {
+				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
+			}
 		} //
 
 	} //
 
+	/*	// draw equivalent empty block on the tetris map
+		for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
+
+			for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
+
+				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
+
+			} //
+
+		} //
+
+		// update coordinates
+		*x = destX
+		(*y)++ // drop one block
+
+		// draw block on the tetris map
+		for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
+
+			for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
+
+				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
+
+			} //
+
+		} //
+	*/
 } // dropBlockOneRow()
