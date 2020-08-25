@@ -217,11 +217,11 @@ func (_ Tetromino) CreateLInverseShape() Tetromino {
 func (_ Tetromino) CreateTShape() Tetromino {
 
 	return Tetromino{
+		2,
 		3,
-		3,
-		[4][4]rune{{'.', '.', '.', '.'},
-			{'.', '#', '.', '.'},
+		[4][4]rune{{'.', '#', '.', '.'},
 			{'#', '#', '#', '.'},
+			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 
 		[4][4]rune{{'.', '.', '.', '.'},

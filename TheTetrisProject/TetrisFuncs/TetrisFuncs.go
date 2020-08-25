@@ -185,6 +185,22 @@ func PrintGameOverAndGTFOH() {
 
 } // printGameOverAndGTFOH()
 
+func clearAboveLines(pa2cTetrisMap *[Const.ROWS][Const.COLUMNS]rune,
+	uBlock Types.Tetromino) {
+
+	//
+	for y := 0; y < uBlock.Y+1; y++ {
+		for x := uBlock.X; x < uBlock.Width+uBlock.X; x++ {
+			//if uBlock.Y < Const.ROWS && uBlock.X+x < Const.COLUMNS { //&&
+			if uBlock.Y >= 0 && uBlock.X >= 0 {
+
+				(*pa2cTetrisMap)[y][x] = '.'
+			}
+		}
+	}
+
+}
+
 func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	block *Types.Tetromino,
 	currX, currY, // usless shits, will be removed :)
@@ -206,6 +222,7 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 
 	} //
 
+	//clearAboveLines(tetrisMap, *block)
 	// update coordinates
 	*x = destX
 	(*y)++ // drop one block
@@ -214,8 +231,8 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
 		for shapeCol := 0; shapeCol < 4; shapeCol++ {
-			if *y+shapeRow < Const.ROWS && *x+shapeCol < Const.COLUMNS &&
-				block.Shape[shapeRow][shapeCol] == '#' {
+			if *y+shapeRow < Const.ROWS && *x+shapeCol < Const.COLUMNS { //&&
+				//block.Shape[shapeRow][shapeCol] == '#' {
 				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
 			}
 		} //
