@@ -60,7 +60,7 @@ func UpdateTetrisMap(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 
 		for col := 0; col < Const.COLUMNS; col++ {
 
-			if (*checkList)[row][col] == true {
+			if (*checkList)[row][col] {
 				(*tetrisMap)[row][col] = '#'
 			} // if
 
@@ -100,16 +100,16 @@ func MarkDoneLines(tetrisBooleanMap *[Const.ROWS][Const.COLUMNS]bool,
 
 	for row := 0; row < Const.ROWS; row++ {
 
-		if (*tetrisBooleanMap)[row][0] == true &&
-			(*tetrisBooleanMap)[row][1] == true &&
-			(*tetrisBooleanMap)[row][2] == true &&
-			(*tetrisBooleanMap)[row][3] == true &&
-			(*tetrisBooleanMap)[row][4] == true &&
-			(*tetrisBooleanMap)[row][5] == true &&
-			(*tetrisBooleanMap)[row][6] == true &&
-			(*tetrisBooleanMap)[row][7] == true &&
-			(*tetrisBooleanMap)[row][8] == true &&
-			(*tetrisBooleanMap)[row][9] == true {
+		if (*tetrisBooleanMap)[row][0] &&
+			(*tetrisBooleanMap)[row][1] &&
+			(*tetrisBooleanMap)[row][2] &&
+			(*tetrisBooleanMap)[row][3] &&
+			(*tetrisBooleanMap)[row][4] &&
+			(*tetrisBooleanMap)[row][5] &&
+			(*tetrisBooleanMap)[row][6] &&
+			(*tetrisBooleanMap)[row][7] &&
+			(*tetrisBooleanMap)[row][8] &&
+			(*tetrisBooleanMap)[row][9] {
 
 			// I fucked up here not gonna lie
 			(*completedLines)[row] = true
@@ -142,7 +142,7 @@ func EliminateLines(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	// look for completed(filled) lines from down to up, it's more logical that way :)
 	for row := Const.ROWS - 1; row >= 0; row-- {
 
-		if (*completedLines)[row] == true {
+		if (*completedLines)[row] {
 
 			// set completion state to false
 			(*completedLines)[row] = false
@@ -187,7 +187,7 @@ func PrintGameOverAndGTFOH() {
 
 func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	block *Types.Tetromino,
-	currX, currY,
+	currX, currY, // usless shits, will be removed :)
 	destX int) {
 
 	x := &block.X
@@ -198,6 +198,7 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 
 		for shapeCol := 0; shapeCol < 4; shapeCol++ {
 			if *y+shapeRow < Const.ROWS && *x+shapeCol < Const.COLUMNS {
+				//block.Shape[shapeRow][shapeCol] == '#' {
 
 				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
 			}
@@ -213,7 +214,8 @@ func DropBlockOneRow(tetrisMap *[Const.ROWS][Const.COLUMNS]rune,
 	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
 		for shapeCol := 0; shapeCol < 4; shapeCol++ {
-			if Const.ROWS > (*y+shapeRow) && Const.COLUMNS > (*x+shapeCol) {
+			if *y+shapeRow < Const.ROWS && *x+shapeCol < Const.COLUMNS &&
+				block.Shape[shapeRow][shapeCol] == '#' {
 				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
 			}
 		} //

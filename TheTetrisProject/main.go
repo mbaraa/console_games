@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-	//"os"
+
 	Const "./Constants"
 	Common "./Shared"
 	TF "./TetrisFuncs"
@@ -70,31 +70,32 @@ func main() {
 
 	//var key keyboard.Key
 
-	/*	go func() {
-			for {
-				chr, _, _ = keyboard.GetSingleKey()
-			}
-		}()
-	*/block = &tetrominos[2]
-	block.Rotate90Degs()
+	go func() {
+		for {
+			chr, _, _ = keyboard.GetSingleKey()
+		}
+	}()
 
 	///////////////////////////////////////////////////////////////////////////
 	///////////////////////// game loop //////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////
 
 	for {
-
+		block = &tetrominos[counter]
+		block.X = col
 		block.Y = droppingRow - (block.Height - 1)
 
-		// overlapping checker
+		// update statement 1:
+		// overlapping checker1
 		if droppingRow >= nColsLengths[col] {
 			//droppingRow = nColsLengths[col] // - 1
-
 			TF.InitLengths(&nColsLengths)
 			TF.CheckTetrisMap(cTetrisMainMap, &bCheckList, &nColsLengths)
 		}
 
-		if droppingRow >= 0 && bCheckList[droppingRow][col] == true {
+		// update statement 2:
+		// restart loop if a shape hits the ground
+		if droppingRow >= 0 && bCheckList[droppingRow][col] {
 
 			if counter >= 6 {
 				counter = 0
@@ -106,15 +107,15 @@ func main() {
 			continue
 		}
 
-		go func() {
+		/*go func() {
 
 			chr, _, _ = keyboard.GetSingleKey()
 
 		}()
-
+		*/
 		time.Sleep(time.Millisecond * 100)
 
-		// move left / right
+		// move left / right, rotate, and quit(pause in future) controls
 		if chr == 'A' || chr == 'a' {
 			newCol--
 		} else if chr == 'D' || chr == 'd' {
@@ -126,13 +127,15 @@ func main() {
 			os.Exit(0)
 		}
 
-		// setting boundaries
+		// boundaries
 		if newCol >= 9 {
 			newCol = 9
 		} else if newCol <= 0 {
 			newCol = 0
 		}
 
+		// update statement 3:
+		// move block on the tetris map
 		droppingRow++
 		if block.Y >= 0 &&
 			droppingRow >= 0 &&
@@ -149,6 +152,8 @@ func main() {
 		    printGameOverAndGTFOH();
 		}*/
 
+		// update statements 4:
+		// clear screen, update maps and print current tetris map
 		Common.Clear()
 		TF.MarkDoneLines(&bCheckList, &bCompletedLines, &nLines)
 		TF.EliminateLines(&cTetrisMainMap, &bCheckList,
