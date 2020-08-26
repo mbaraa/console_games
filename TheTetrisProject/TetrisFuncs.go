@@ -48,6 +48,8 @@ func InitTetrisMap(tetrisMap *[ROWS][COLUMNS]rune) {
 	} // outer for
 } // initTetrisMap()
 
+// the other folks
+
 // replace true in boolean tetris map with #s in the tetris map
 func UpdateTetrisMap(tetrisMap *[ROWS][COLUMNS]rune,
 	checkList *[ROWS][COLUMNS]bool) {
@@ -209,8 +211,8 @@ func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
 	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
 		for shapeCol := 0; shapeCol < 4; shapeCol++ {
-			if *y+shapeRow < ROWS && *x+shapeCol < COLUMNS {
-				//block.Shape[shapeRow][shapeCol] == '#' {
+			if *y+shapeRow <= ROWS && *x+shapeCol <= COLUMNS &&
+				block.Shape[shapeRow][shapeCol] == '#' {
 
 				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
 			}
@@ -227,8 +229,8 @@ func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
 	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
 		for shapeCol := 0; shapeCol < 4; shapeCol++ {
-			if *y+shapeRow < ROWS && *x+shapeCol < COLUMNS { //&&
-				//block.Shape[shapeRow][shapeCol] == '#' {
+			if *y+shapeRow <= ROWS && *x+shapeCol <= COLUMNS &&
+				block.Shape[shapeRow][shapeCol] == '#' {
 				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
 			}
 		} //

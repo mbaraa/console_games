@@ -94,12 +94,14 @@ func main() {
 	for {
 		puBlock = &auTetrominos[nCurrTetromino]
 		puBlock.X = nCurrX
-		puBlock.Y = nCurrY - (puBlock.Height - 1)
+		puBlock.Y = nCurrY - (puBlock.Height - 1) // height-1 because of the 0 based arrays
 
 		// update statement 1:
 		// overlapping checker1
-		if nCurrY >= anColsLengths[nCurrTetromino] {
+		if nCurrY >= anColsLengths[nCurrX] {
+			// DEBUG:
 			//droppingRow = nColsLengths[col] // - 1
+			// normal
 			InitLengths(&anColsLengths)
 			CheckTetrisMap(a2cTetrisMainMap, &a2bCheckList, &anColsLengths)
 		}
@@ -108,6 +110,7 @@ func main() {
 		// restart loop to avoid overlapping if a shape hits the ground
 		if nCurrY >= 0 && a2bCheckList[nCurrY][nCurrX] {
 
+			// use the next tetromino
 			if nCurrTetromino >= 6 {
 				nCurrTetromino = 0
 			} else {
@@ -124,7 +127,7 @@ func main() {
 
 		}()
 		*/
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 150)
 
 		// move left / right, rotate, and quit(pause in future) controls
 		// must be done parallel to the rest of the loop to avoid deadlocks
@@ -154,7 +157,7 @@ func main() {
 		nCurrY++
 		if puBlock.Y >= 0 &&
 			nCurrY >= 0 &&
-			nCurrY <= anColsLengths[nCurrTetromino] {
+			nCurrY <= anColsLengths[nCurrX] {
 
 			DropBlockOneRow(&a2cTetrisMainMap, puBlock,
 				nCurrX, nCurrY, nNewX)
@@ -175,11 +178,12 @@ func main() {
 			&abCompletedLines, &anColsLengths)
 		UpdateTetrisMap(&a2cTetrisMainMap, &a2bCheckList)
 		PrintMatrix(a2cTetrisMainMap)
+		// DEBUG:
+		printBoolMtrx(a2bCheckList)
 
-		//// exists for debugging
-
+		// DEBUG:
 		fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
-
+		fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
 		/*fmt.Println("lines completed:")
 		for col := 0; col < Const.ROWS; col++ {
 
@@ -192,9 +196,19 @@ func main() {
 			fmt.Printf("%d ", anColsLengths[col])
 
 		}
-		fmt.Printf("\nLines: %d", nLines)
+		fmt.Printf("\nLines: %d\n", nLines)
 		//// debugging budies
 
 	} // game loop
 
+}
+
+// DEBUG:
+func printBoolMtrx(boolmtrx [ROWS][COLUMNS]bool) {
+	for i := 0; i < ROWS; i++ {
+		for j := 0; j < COLUMNS; j++ {
+			fmt.Printf("%v ", boolmtrx[i][j])
+		}
+		fmt.Println("")
+	}
 }
