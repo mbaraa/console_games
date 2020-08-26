@@ -1,16 +1,14 @@
-package foo
+package main
 
 import (
 	"fmt"
 	"time"
-
-	"./Types"
 )
 
 func main() {
 
 	var (
-		temp        Types.Tetromino
+		temp        Tetromino
 		square      = temp.CreateSquareShape()
 		I           = temp.CreateIShape()
 		skew        = temp.CreateSkewShape()
@@ -20,11 +18,11 @@ func main() {
 		T           = temp.CreateTShape()
 	)
 
-	var tetrominos [7]Types.Tetromino = [7]Types.Tetromino{square, I,
+	var tetrominos [7]Tetromino = [7]Tetromino{square, I,
 		L, LInverse,
 		T, skew, skewInverse}
 
-	var tet Types.Tetromino
+	var tet Tetromino
 	i := 0
 	for {
 		if i >= 7 {
@@ -34,19 +32,19 @@ func main() {
 		tet = tetrominos[i]
 
 		fmt.Println("Original:")
-		PrintMatrix(tet.Shape)
+		PrintMatrixIn(tet.Shape)
 
 		fmt.Println("1st rotate:")
 		tet.Rotate90Degs()
-		PrintMatrix(tet.Shape)
+		PrintMatrixIn(tet.Shape)
 
 		fmt.Println("2nd rotate:")
 		tet.Rotate90Degs()
-		PrintMatrix(tet.Shape)
+		PrintMatrixIn(tet.Shape)
 
 		fmt.Println("3rd rotate:")
 		tet.Rotate90Degs()
-		PrintMatrix(tet.Shape)
+		PrintMatrixIn(tet.Shape)
 
 		time.Sleep(time.Second * 2)
 		i++
@@ -54,7 +52,7 @@ func main() {
 
 }
 
-func PrintMatrix(matrix [4][4]rune) {
+func PrintMatrixIn(matrix [4][4]rune) {
 
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 4; j++ {

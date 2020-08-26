@@ -5,10 +5,10 @@ import (
 	"os"
 	"time"
 
-	Const "./Constants"
+	/*Const "./Constants"
 	Common "./Shared"
 	TF "./TetrisFuncs"
-	"./Types"
+	"./Types"*/
 	"github.com/eiannone/keyboard"
 )
 
@@ -22,20 +22,20 @@ func main() {
 		_ = keyboard.Close()
 	}()
 
-	var a2cTetrisMainMap [Const.ROWS][Const.COLUMNS]rune
+	var a2cTetrisMainMap [ROWS][COLUMNS]rune
 	// mark each taken place with true
-	var a2bCheckList [Const.ROWS][Const.COLUMNS]bool
+	var a2bCheckList [ROWS][COLUMNS]bool
 	// columns lengths
-	var anColsLengths [Const.COLUMNS]int
+	var anColsLengths [COLUMNS]int
 	// completed rows
-	var abCompletedLines [Const.ROWS]bool
+	var abCompletedLines [ROWS]bool
 	// lines eliminated
 	var nLines int = 0
 
-	TF.InitLengths(&anColsLengths)
-	TF.InitCheckList(&a2bCheckList)
-	TF.InitTetrisMap(&a2cTetrisMainMap)
-	TF.InitCompletedLines(&abCompletedLines)
+	InitLengths(&anColsLengths)
+	InitCheckList(&a2bCheckList)
+	InitTetrisMap(&a2cTetrisMainMap)
+	InitCompletedLines(&abCompletedLines)
 
 	// start dropping from the first row
 	var nCurrY int = -1
@@ -45,10 +45,10 @@ func main() {
 	var nNewX = int(nCurrX)
 
 	// print current tetris
-	Common.PrintMatrix(a2cTetrisMainMap)
+	PrintMatrix(a2cTetrisMainMap)
 
 	var (
-		temp        Types.Tetromino
+		temp        Tetromino
 		square      = temp.CreateSquareShape()
 		I           = temp.CreateIShape()
 		skew        = temp.CreateSkewShape()
@@ -58,7 +58,7 @@ func main() {
 		T           = temp.CreateTShape()
 	)
 
-	var auTetrominos [7]Types.Tetromino = [7]Types.Tetromino{square, I,
+	var auTetrominos [7]Tetromino = [7]Tetromino{square, I,
 		L, LInverse,
 		T, skew, skewInverse}
 
@@ -66,7 +66,7 @@ func main() {
 	var nCurrTetromino int = 0
 
 	// current tetromino object pointer
-	var puBlock *Types.Tetromino
+	var puBlock *Tetromino
 
 	// keystroke channels
 	chcKeyChar := make(chan rune)
@@ -100,12 +100,12 @@ func main() {
 		// overlapping checker1
 		if nCurrY >= anColsLengths[nCurrTetromino] {
 			//droppingRow = nColsLengths[col] // - 1
-			TF.InitLengths(&anColsLengths)
-			TF.CheckTetrisMap(a2cTetrisMainMap, &a2bCheckList, &anColsLengths)
+			InitLengths(&anColsLengths)
+			CheckTetrisMap(a2cTetrisMainMap, &a2bCheckList, &anColsLengths)
 		}
 
 		// update statement 2:
-		// restart loop if a shape hits the ground
+		// restart loop to avoid overlapping if a shape hits the ground
 		if nCurrY >= 0 && a2bCheckList[nCurrY][nCurrX] {
 
 			if nCurrTetromino >= 6 {
@@ -156,7 +156,7 @@ func main() {
 			nCurrY >= 0 &&
 			nCurrY <= anColsLengths[nCurrTetromino] {
 
-			TF.DropBlockOneRow(&a2cTetrisMainMap, puBlock,
+			DropBlockOneRow(&a2cTetrisMainMap, puBlock,
 				nCurrX, nCurrY, nNewX)
 		}
 
@@ -169,16 +169,16 @@ func main() {
 
 		// update statements 4:
 		// clear screen, update maps and print current tetris map
-		Common.Clear()
-		TF.MarkDoneLines(&a2bCheckList, &abCompletedLines, &nLines)
-		TF.EliminateLines(&a2cTetrisMainMap, &a2bCheckList,
+		Clear()
+		MarkDoneLines(&a2bCheckList, &abCompletedLines, &nLines)
+		EliminateLines(&a2cTetrisMainMap, &a2bCheckList,
 			&abCompletedLines, &anColsLengths)
-		TF.UpdateTetrisMap(&a2cTetrisMainMap, &a2bCheckList)
-		Common.PrintMatrix(a2cTetrisMainMap)
+		UpdateTetrisMap(&a2cTetrisMainMap, &a2bCheckList)
+		PrintMatrix(a2cTetrisMainMap)
 
 		//// exists for debugging
 
-		fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrX, anColsLengths[nCurrX])
+		fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
 
 		/*fmt.Println("lines completed:")
 		for col := 0; col < Const.ROWS; col++ {
@@ -187,7 +187,7 @@ func main() {
 
 		}*/
 		fmt.Println("\nCols lengths:")
-		for col := 0; col < Const.COLUMNS; col++ {
+		for col := 0; col < COLUMNS; col++ {
 
 			fmt.Printf("%d ", anColsLengths[col])
 

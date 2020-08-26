@@ -1,18 +1,16 @@
-package Constants
+package main
 
 const (
-
-	ROWS = 20
+	ROWS    = 20
 	COLUMNS = 10
-
 )
 
 // output colors
 const (
 
 	// common
-	RESET  = "\033[0m" // auto reset the rest of text to default color
-	BOLD   = "\033[1m" // increase this value if you want bolder text
+	RESET = "\033[0m" // auto reset the rest of text to default color
+	BOLD  = "\033[1m" // increase this value if you want bolder text
 
 	// color
 	BLACK       = 30 // default = 39

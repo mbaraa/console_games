@@ -1,6 +1,4 @@
-package Types
-
-import Common "../Shared"
+package main
 
 // tetromino struct
 type Tetromino struct {
@@ -73,7 +71,7 @@ func (tet *Tetromino) Rotate90Degs() {
 	}
 
 	// last but not least swapping hieght & width
-	Common.SwapInt(&tet.Height, &tet.Width)
+	SwapInt(&tet.Height, &tet.Width)
 
 	// set the rotated shape
 	tet.Shape = newShape

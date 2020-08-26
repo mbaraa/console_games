@@ -1,9 +1,7 @@
-package SharedFuncs
+package main
 
 import (
 	"fmt"
-
-	Const "../Constants"
 )
 
 func Clear() {
@@ -12,10 +10,10 @@ func Clear() {
 
 }
 
-func PrintMatrix(matrix [Const.ROWS][Const.COLUMNS]rune) {
+func PrintMatrix(matrix [ROWS][COLUMNS]rune) {
 
-	for i := 0; i < Const.ROWS; i++ {
-		for j := 0; j < Const.COLUMNS; j++ {
+	for i := 0; i < ROWS; i++ {
+		for j := 0; j < COLUMNS; j++ {
 			fmt.Printf("%c ", matrix[i][j])
 		}
 		fmt.Println("")
