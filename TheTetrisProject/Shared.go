@@ -32,3 +32,18 @@ func SwapInt(x, y *int) {
 	*y = temp
 
 }
+
+func GetMinArrayElement(array []int) int {
+	var min = array[0]
+
+	for i := 0; i < len(array); i++ {
+
+		if array[i] < min {
+			min = array[i]
+		}
+
+	}
+
+	return min
+
+}

@@ -84,6 +84,7 @@ func main() {
 
 		}
 	}()
+	var bIsRotUsed bool
 
 	///////////////////////////////////////////////////////////////////////////
 	///////////////////////// game loop //////////////////////////////////////
@@ -128,7 +129,7 @@ func main() {
 
 		}()
 		*/
-		time.Sleep(time.Millisecond * 150)
+		time.Sleep(time.Millisecond * 100)
 
 		// move left / right, rotate, and quit(pause in future) controls
 		// must be done parallel to the rest of the loop to avoid deadlocks
@@ -141,12 +142,27 @@ func main() {
 			} else if chr == 'D' || chr == 'd' {
 				nCurrX++
 			} else if chr == 'W' || chr == 'w' {
+				bIsRotUsed = true
 				puBlock.Rotate90Degs()
 
 			} else if chr == 'q' {
 				os.Exit(0)
 			}
 		}()
+
+		// DEBUG:
+		if bIsRotUsed {
+			for row := 0; row < nCurrY+puBlock.Height; row++ {
+
+				for col := 0; col < COLUMNS; col++ {
+
+					a2cTetrisMainMap[row][col] = '.'
+				}
+
+			}
+			//bIsRotUsed = false
+		}
+
 		// boundaries
 		if nCurrX >= 9 {
 			nCurrX = 9
@@ -178,11 +194,12 @@ func main() {
 		UpdateTetrisMap(&a2cTetrisMainMap, &a2bCheckList)
 		PrintMatrix(a2cTetrisMainMap)
 		// DEBUG:
-		printBoolMtrx(a2bCheckList)
+		//printBoolMtrx(a2bCheckList)
 
 		// DEBUG:
 		fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
 		fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
+		fmt.Printf("rot state: %v\n", bIsRotUsed)
 		/*fmt.Println("lines completed:")
 		for col := 0; col < Const.ROWS; col++ {
 

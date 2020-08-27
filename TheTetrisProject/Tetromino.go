@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // tetromino struct
 type Tetromino struct {
 	/*	CenterX int // center of the shape
@@ -25,6 +27,59 @@ type Tetromino struct {
 // private method to get equivalent none shape
 func (tet Tetromino) getEqNone() [4][4]rune {
 	return tet.EqNone
+}
+
+// private method to put the rotated tetromino back where it was
+func (tet *Tetromino) shiftToOriginalPlace() {
+
+	var (
+		anXDist []int
+		anYDist []int
+	)
+
+	for row := 0; row < 4; row++ {
+
+		for col := 0; col < 4; col++ {
+
+			if (*tet).Shape[row][col] == '#' {
+
+				anXDist = append(anXDist, col)
+				anYDist = append(anYDist, row)
+
+			}
+
+		}
+	}
+
+	fmt.Println(anXDist, anYDist)
+
+	var (
+		nStartingRow int = GetMinArrayElement(anYDist)
+		nStartingCol int = GetMinArrayElement(anXDist)
+	)
+
+	var a2cEmptyShape [4][4]rune = (*tet).EqNone
+
+	var (
+		newRow int
+		newCol int
+	)
+
+	for row := nStartingRow; row < (*tet).Height+nStartingRow; row++ {
+
+		for col := nStartingCol; col < (*tet).Width+nStartingCol; col++ {
+
+			a2cEmptyShape[newRow][newCol] = (*tet).Shape[row][col]
+			newCol++
+		}
+
+		newCol = 0
+		newRow++
+
+	}
+
+	(*tet).Shape = a2cEmptyShape
+
 }
 
 // Rotate the shape Π/2 radians (euler's formula)
@@ -75,6 +130,8 @@ func (tet *Tetromino) Rotate90Degs() {
 
 	// set the rotated shape
 	tet.Shape = newShape
+
+	tet.shiftToOriginalPlace()
 
 }
 
