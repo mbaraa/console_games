@@ -98,6 +98,7 @@ func MarkDoneLines(tetrisBooleanMap *[ROWS][COLUMNS]bool,
 
 	for row := 0; row < ROWS; row++ {
 
+		// if the first field in the line is filled check the next ones
 		if (*tetrisBooleanMap)[row][0] &&
 			(*tetrisBooleanMap)[row][1] &&
 			(*tetrisBooleanMap)[row][2] &&
@@ -116,20 +117,32 @@ func MarkDoneLines(tetrisBooleanMap *[ROWS][COLUMNS]bool,
 			(*eliminatedLines)++
 
 			/*for(int col = 0; col < COLUMNS; col++){
+			for col := 0; col < COLUMNS; col++ {
 
 			    if( tetrisBooleanMap[row][col] != 1 ) {
 			        break;
 			    }
 			    if( tetrisBooleanMap[row][9] == 1 ) {
+				// if a field is empty GTFOUH
+				if !tetrisBooleanMap[row][col] {
+					break
+				}
+				// if we reached here then the lines is complete
+				if tetrisBooleanMap[row][9] {
+					(*completedLines)[row] = true
 
 			    }
+					// increase eliminated lines by one
+					(*eliminatedLines)++
+				}
 
 			}*/
+			// inner for
 
 		} // crazy if
 	} // outer for
 
-} // void markDoneLines
+} // markDoneLines
 
 // eliminate completed lines and shift upper lines down
 func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
@@ -186,41 +199,44 @@ func PrintGameOverAndGTFOH() {
 func clearAboveLines(pa2cTetrisMap *[ROWS][COLUMNS]rune,
 	uBlock Tetromino) {
 
-	//
-	for y := 0; y < uBlock.Y+1; y++ {
-		for x := uBlock.X; x < uBlock.Width+uBlock.X; x++ {
-			//if uBlock.Y < Const.ROWS && uBlock.X+x < Const.COLUMNS { //&&
-			if uBlock.Y >= 0 && uBlock.X >= 0 {
-
-				(*pa2cTetrisMap)[y][x] = '.'
-			}
-		}
-	}
-
-}
-
-func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
-	block *Tetromino,
-	currX, currY, // usless shits, will be removed :)
-	destX int) {
-
-	x := &block.X
-	y := &block.Y
+	x := uBlock.X
+	y := uBlock.Y
 
 	// draw equivalent empty block on the tetris map
 	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
 		for shapeCol := 0; shapeCol < 4; shapeCol++ {
-			if *y+shapeRow <= ROWS && *x+shapeCol <= COLUMNS &&
-				block.Shape[shapeRow][shapeCol] == '#' {
+			if y+shapeRow < ROWS && x+shapeCol < COLUMNS { // &&
+				//uBlock.Shape[shapeRow][shapeCol] == '#' {
 
-				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
+				(*pa2cTetrisMap)[y+shapeRow][x+shapeCol] = (uBlock).EqNone[shapeRow][shapeCol]
 			}
 		} //
 
 	} //
 
-	//clearAboveLines(tetrisMap, *block)
+	/*
+		//
+		for y := 0; y < uBlock.Y+1; y++ {
+			for x := uBlock.X; x < uBlock.Width+uBlock.X; x++ {
+				//if uBlock.Y < Const.ROWS && uBlock.X+x < Const.COLUMNS { //&&
+				if uBlock.Y >= 0 && uBlock.X >= 0 {
+
+					(*pa2cTetrisMap)[y][x] = '.'
+				}
+			}
+		}
+	*/
+}
+
+func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
+	block *Tetromino,
+	destX int) {
+
+	x := &block.X
+	y := &block.Y
+
+	clearAboveLines(tetrisMap, *block)
 	// update coordinates
 	*x = destX
 	(*y)++ // drop one block
@@ -229,7 +245,7 @@ func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
 	for shapeRow := 0; shapeRow < 4; shapeRow++ {
 
 		for shapeCol := 0; shapeCol < 4; shapeCol++ {
-			if *y+shapeRow <= ROWS && *x+shapeCol <= COLUMNS &&
+			if *y+shapeRow < ROWS && *x+shapeCol < COLUMNS &&
 				block.Shape[shapeRow][shapeCol] == '#' {
 				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
 			}
@@ -237,30 +253,4 @@ func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
 
 	} //
 
-	/*	// draw equivalent empty block on the tetris map
-		for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
-
-			for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
-
-				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).EqNone[shapeRow][shapeCol]
-
-			} //
-
-		} //
-
-		// update coordinates
-		*x = destX
-		(*y)++ // drop one block
-
-		// draw block on the tetris map
-		for shapeRow := 0; shapeRow < (*block).Height; shapeRow++ {
-
-			for shapeCol := 0; shapeCol < (*block).Width; shapeCol++ {
-
-				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
-
-			} //
-
-		} //
-	*/
 } // dropBlockOneRow()

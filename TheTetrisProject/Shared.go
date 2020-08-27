@@ -13,6 +13,10 @@ func Clear() {
 func PrintMatrix(matrix [ROWS][COLUMNS]rune) {
 
 	for i := 0; i < ROWS; i++ {
+		fmt.Print(i, "  ")
+		if i < 10 {
+			fmt.Print(" ")
+		}
 		for j := 0; j < COLUMNS; j++ {
 			fmt.Printf("%c ", matrix[i][j])
 		}

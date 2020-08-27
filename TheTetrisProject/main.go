@@ -42,8 +42,6 @@ func main() {
 	// dropping starts from the middle
 	var nCurrX int = 3
 
-	var nNewX = int(nCurrX)
-
 	// print current tetris
 	PrintMatrix(a2cTetrisMainMap)
 
@@ -79,7 +77,7 @@ func main() {
 		for {
 			cKeyChar, _, _ := keyboard.GetSingleKey()
 
-			// append non-zero values to chaannel
+			// append non-zero values to channel
 			if cKeyChar > 0 {
 				chcKeyChar <- cKeyChar
 			}
@@ -117,6 +115,9 @@ func main() {
 				nCurrTetromino++
 			}
 
+			puBlock.X = 4 // the middle of the tetris map
+			nCurrX = 4
+
 			nCurrY = 0
 			continue
 		}
@@ -132,12 +133,13 @@ func main() {
 		// move left / right, rotate, and quit(pause in future) controls
 		// must be done parallel to the rest of the loop to avoid deadlocks
 		go func() {
+			// get keystroke charachter from its channel
 			chr := <-chcKeyChar
 
 			if chr == 'A' || chr == 'a' {
-				nNewX--
+				nCurrX--
 			} else if chr == 'D' || chr == 'd' {
-				nNewX++
+				nCurrX++
 			} else if chr == 'W' || chr == 'w' {
 				puBlock.Rotate90Degs()
 
@@ -146,10 +148,10 @@ func main() {
 			}
 		}()
 		// boundaries
-		if nNewX >= 9 {
-			nNewX = 9
-		} else if nNewX <= 0 {
-			nNewX = 0
+		if nCurrX >= 9 {
+			nCurrX = 9
+		} else if nCurrX <= 0 {
+			nCurrX = 0
 		}
 
 		// update statement 3:
@@ -159,11 +161,8 @@ func main() {
 			nCurrY >= 0 &&
 			nCurrY <= anColsLengths[nCurrX] {
 
-			DropBlockOneRow(&a2cTetrisMainMap, puBlock,
-				nCurrX, nCurrY, nNewX)
+			DropBlockOneRow(&a2cTetrisMainMap, puBlock, nCurrX)
 		}
-
-		nCurrX = nNewX
 
 		////////////
 		/*if( tetrisMainMap[0][col] == '#' && tetrisMainMap[1][col] == '#') {
