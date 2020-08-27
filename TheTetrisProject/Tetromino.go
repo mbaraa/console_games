@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 // tetromino struct
 type Tetromino struct {
 	/*	CenterX int // center of the shape
@@ -50,8 +48,6 @@ func (tet *Tetromino) shiftToOriginalPlace() {
 
 		}
 	}
-
-	fmt.Println(anXDist, anYDist)
 
 	var (
 		nStartingRow int = GetMinArrayElement(anYDist)

@@ -193,26 +193,27 @@ func main() {
 			&abCompletedLines, &anColsLengths)
 		UpdateTetrisMap(&a2cTetrisMainMap, &a2bCheckList)
 		PrintMatrix(a2cTetrisMainMap)
+		fmt.Printf("\nLines: %d\n", nLines)
+
 		// DEBUG:
 		//printBoolMtrx(a2bCheckList)
 
-		// DEBUG:
-		fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
-		fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
-		fmt.Printf("rot state: %v\n", bIsRotUsed)
-		/*fmt.Println("lines completed:")
-		for col := 0; col < Const.ROWS; col++ {
+		/*		// DEBUG:
+				fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
+				fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
+				fmt.Printf("rot state: %v\n", bIsRotUsed)
+				/*fmt.Println("lines completed:")
+				for col := 0; col < Const.ROWS; col++ {
 
-			fmt.Printf("%v ", bCompletedLines[col])
+					fmt.Printf("%v ", bCompletedLines[col])
 
-		}*/
-		fmt.Println("\nCols lengths:")
-		for col := 0; col < COLUMNS; col++ {
+				}
+				fmt.Println("\nCols lengths:")
+				for col := 0; col < COLUMNS; col++ {
 
-			fmt.Printf("%d ", anColsLengths[col])
+					fmt.Printf("%d ", anColsLengths[col])
 
-		}
-		fmt.Printf("\nLines: %d\n", nLines)
+				}*/
 		//// debugging budies
 
 	} // game loop
