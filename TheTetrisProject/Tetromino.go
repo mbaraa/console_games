@@ -54,7 +54,7 @@ func (tet *Tetromino) shiftToOriginalPlace() {
 		nStartingCol int = GetMinArrayElement(anXDist)
 	)
 
-	var a2cEmptyShape [4][4]rune = (*tet).EqNone
+	var a2cNewShape [4][4]rune = (*tet).EqNone
 
 	var (
 		newRow int
@@ -65,7 +65,7 @@ func (tet *Tetromino) shiftToOriginalPlace() {
 
 		for col := nStartingCol; col < (*tet).Width+nStartingCol; col++ {
 
-			a2cEmptyShape[newRow][newCol] = (*tet).Shape[row][col]
+			a2cNewShape[newRow][newCol] = (*tet).Shape[row][col]
 			newCol++
 		}
 
@@ -74,7 +74,7 @@ func (tet *Tetromino) shiftToOriginalPlace() {
 
 	}
 
-	(*tet).Shape = a2cEmptyShape
+	(*tet).Shape = a2cNewShape
 
 }
 
@@ -123,7 +123,6 @@ func (tet *Tetromino) Rotate90Degs() {
 
 	// last but not least swapping hieght & width
 	SwapInt(&tet.Height, &tet.Width)
-
 	// set the rotated shape
 	tet.Shape = newShape
 

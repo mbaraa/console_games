@@ -40,7 +40,7 @@ func main() {
 	// start dropping from the first row
 	var nCurrY int = -1
 	// dropping starts from the middle
-	var nCurrX int = 3
+	var nCurrX int = 4
 
 	// print current tetris
 	PrintMatrix(a2cTetrisMainMap)
@@ -61,7 +61,7 @@ func main() {
 		T, skew, skewInverse}
 
 	// current tetromino index
-	var nCurrTetromino int = 0
+	var nCurrTetromino int
 
 	// current tetromino object pointer
 	var puBlock *Tetromino
@@ -84,13 +84,17 @@ func main() {
 
 		}
 	}()
+
+	// rotation state, need to clean lines above the rotated tetromino
 	var bIsRotUsed bool
+	// game state boolean, well that's really obvious :)
+	var bGameOn bool = true
 
 	///////////////////////////////////////////////////////////////////////////
 	///////////////////////// game loop //////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////
 
-	for {
+	for bGameOn {
 		puBlock = &auTetrominos[nCurrTetromino]
 		puBlock.X = nCurrX
 		puBlock.Y = nCurrY - (puBlock.Height - 1) // height-1 because of the 0 based arrays
@@ -98,9 +102,7 @@ func main() {
 		// update statement 1:
 		// overlapping checker1
 		if nCurrY >= anColsLengths[nCurrX] {
-			// DEBUG:
-			//droppingRow = nColsLengths[col] // - 1
-			// normal
+
 			InitLengths(&anColsLengths)
 			CheckTetrisMap(a2cTetrisMainMap, &a2bCheckList, &anColsLengths)
 		}
@@ -129,6 +131,7 @@ func main() {
 
 		}()
 		*/
+		// pause the game so it won't go crazy fast
 		time.Sleep(time.Millisecond * 100)
 
 		// move left / right, rotate, and quit(pause in future) controls
@@ -150,19 +153,6 @@ func main() {
 			}
 		}()
 
-		// DEBUG:
-		if bIsRotUsed {
-			for row := 0; row < nCurrY+puBlock.Height; row++ {
-
-				for col := 0; col < COLUMNS; col++ {
-
-					a2cTetrisMainMap[row][col] = '.'
-				}
-
-			}
-			//bIsRotUsed = false
-		}
-
 		// boundaries
 		if nCurrX >= 9 {
 			nCurrX = 9
@@ -180,10 +170,11 @@ func main() {
 			DropBlockOneRow(&a2cTetrisMainMap, puBlock, nCurrX)
 		}
 
-		////////////
-		/*if( tetrisMainMap[0][col] == '#' && tetrisMainMap[1][col] == '#') {
-		    printGameOverAndGTFOH();
-		}*/
+		// last checking statement:
+		// game over!
+		if IsGameOver(anColsLengths) {
+			bGameOn = false
+		}
 
 		// update statements 4:
 		// clear screen, update maps and print current tetris map
@@ -198,25 +189,41 @@ func main() {
 		// DEBUG:
 		//printBoolMtrx(a2bCheckList)
 
-		/*		// DEBUG:
-				fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
-				fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
-				fmt.Printf("rot state: %v\n", bIsRotUsed)
-				/*fmt.Println("lines completed:")
-				for col := 0; col < Const.ROWS; col++ {
+		// DEBUG:
+		fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
+		fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
+		fmt.Printf("tetromino's H: %d, tetromino's W: %d\n", puBlock.Height, puBlock.Width)
+		/*fmt.Println("lines completed:")
+		for col := 0; col < ROWS; col++ {
 
-					fmt.Printf("%v ", bCompletedLines[col])
+			fmt.Printf("%v ", abCompletedLines[col])
 
-				}
-				fmt.Println("\nCols lengths:")
-				for col := 0; col < COLUMNS; col++ {
+		}*/
+		fmt.Println("\nCols lengths:")
+		for col := 0; col < COLUMNS; col++ {
 
-					fmt.Printf("%d ", anColsLengths[col])
+			fmt.Printf("%d ", anColsLengths[col])
 
-				}*/
+		}
 		//// debugging budies
 
+		// DEBUG:
+		// clear above lines from hashes
+		if bIsRotUsed {
+			for row := 0; row < nCurrY+puBlock.Height+1; row++ {
+
+				for col := 0; col < COLUMNS; col++ {
+
+					a2cTetrisMainMap[row][col] = '.'
+				}
+
+			}
+			bIsRotUsed = false
+		}
+
 	} // game loop
+
+	PrintGameOver()
 
 }
 

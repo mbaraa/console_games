@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
 // initializers:
@@ -82,8 +81,21 @@ func CheckTetrisMap(tetrisMap [ROWS][COLUMNS]rune,
 			if tetrisMap[row][col] == '#' {
 
 				(*checkList)[row][col] = true
-				(*lengths)[col]--
+				//(*lengths)[col]-- //= row - 1
 				//break
+
+			} // if
+		} // inner for
+	} // outer for
+
+	for col := 0; col < COLUMNS; col++ {
+
+		for row := 0; row < ROWS; row++ {
+
+			if tetrisMap[row][col] == '#' {
+
+				(*lengths)[col] = row - 1
+				break
 
 			} // if
 		} // inner for
@@ -150,8 +162,8 @@ func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
 	completedLines *[ROWS]bool,
 	columnsLengths *[COLUMNS]int) {
 
-	// look for completed(filled) lines from down to up, it's more logical that way :)
-	for row := ROWS - 1; row >= 0; row-- {
+	// look for completed(filled)
+	for row := 0; row < ROWS; row++ {
 
 		if (*completedLines)[row] {
 
@@ -185,14 +197,13 @@ func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
 
 } // eliminateLines()
 
-// quit the game
-func PrintGameOverAndGTFOH() {
+//
+func PrintGameOver() {
 	Clear()
 	// print red game over
 	fmt.Println(RED)
 	fmt.Println("GAME OVER !!!!")
 	fmt.Println(RESET)
-	os.Exit(0)
 
 } // printGameOverAndGTFOH()
 
@@ -254,3 +265,17 @@ func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
 	} //
 
 } // dropBlockOneRow()
+
+func IsGameOver(anColsLengths [COLUMNS]int) bool {
+
+	for col := 0; col < COLUMNS; col++ {
+
+		if anColsLengths[col] == 0 {
+			return true
+		}
+
+	}
+
+	return false
+
+}
