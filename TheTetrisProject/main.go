@@ -2,13 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"time"
 
-	/*Const "./Constants"
-	Common "./Shared"
-	TF "./TetrisFuncs"
-	"./Types"*/
 	"github.com/eiannone/keyboard"
 )
 
@@ -18,10 +13,9 @@ func main() {
 		panic(err)
 	}
 	// end listening to keyboard when the program is done
-	defer func() {
-		_ = keyboard.Close()
-	}()
+	defer keyboard.Close()
 
+	// da tetris map
 	var a2cTetrisMainMap [ROWS][COLUMNS]rune
 	// mark each taken place with true
 	var a2bCheckList [ROWS][COLUMNS]bool
@@ -38,7 +32,7 @@ func main() {
 	InitCompletedLines(&abCompletedLines)
 
 	// start dropping from the first row
-	var nCurrY int = -1
+	var nCurrY int = 0
 	// dropping starts from the middle
 	var nCurrX int = 4
 
@@ -61,7 +55,7 @@ func main() {
 		T, skew, skewInverse}
 
 	// current tetromino index
-	var nCurrTetromino int
+	var nCurrTetromino int = 0
 
 	// current tetromino object pointer
 	var puBlock *Tetromino
@@ -86,7 +80,7 @@ func main() {
 	}()
 
 	// rotation state, need to clean lines above the rotated tetromino
-	var bIsRotUsed bool
+	var bIsRotUsed bool = false
 	// game state boolean, well that's really obvious :)
 	var bGameOn bool = true
 
@@ -149,13 +143,13 @@ func main() {
 				puBlock.Rotate90Degs()
 
 			} else if chr == 'q' {
-				os.Exit(0)
+				bGameOn = false
 			}
 		}()
 
 		// boundaries
-		if nCurrX >= 9 {
-			nCurrX = 9
+		if nCurrX >= 9-puBlock.Width+1 {
+			nCurrX = 9 - puBlock.Width + 1
 		} else if nCurrX <= 0 {
 			nCurrX = 0
 		}
@@ -184,29 +178,29 @@ func main() {
 			&abCompletedLines, &anColsLengths)
 		UpdateTetrisMap(&a2cTetrisMainMap, &a2bCheckList)
 		PrintMatrix(a2cTetrisMainMap)
-		fmt.Printf("\nLines: %d\n", nLines)
+		fmt.Printf("\n Lines: %d\n", nLines)
 
 		// DEBUG:
 		//printBoolMtrx(a2bCheckList)
+		/*
+			// DEBUG:
+			fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
+			fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
+			fmt.Printf("tetromino's H: %d, tetromino's W: %d\n", puBlock.Height, puBlock.Width)
+			/*fmt.Println("lines completed:")
+			for col := 0; col < ROWS; col++ {
 
-		// DEBUG:
-		fmt.Printf("droppingRow: %d, colLength: %d\n", nCurrY, anColsLengths[nCurrX])
-		fmt.Printf("tetromino's y: %d, tetromino's x: %d\n", puBlock.Y, puBlock.X)
-		fmt.Printf("tetromino's H: %d, tetromino's W: %d\n", puBlock.Height, puBlock.Width)
-		/*fmt.Println("lines completed:")
-		for col := 0; col < ROWS; col++ {
+				fmt.Printf("%v ", abCompletedLines[col])
 
-			fmt.Printf("%v ", abCompletedLines[col])
+			}
+			fmt.Println("\nCols lengths:")
+			for col := 0; col < COLUMNS; col++ {
 
-		}*/
-		fmt.Println("\nCols lengths:")
-		for col := 0; col < COLUMNS; col++ {
+				fmt.Printf("%d ", anColsLengths[col])
 
-			fmt.Printf("%d ", anColsLengths[col])
-
-		}
-		//// debugging budies
-
+			}
+			//// debugging budies
+		*/
 		// DEBUG:
 		// clear above lines from hashes
 		if bIsRotUsed {

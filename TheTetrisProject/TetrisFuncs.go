@@ -74,6 +74,7 @@ func CheckTetrisMap(tetrisMap [ROWS][COLUMNS]rune,
 	/* reversed checker to prevent stacked areas,
 	 *   gone back to the original after having trouble with eliminateLines
 	 */
+	// this one is for updating tetris boolean map
 	for col := 0; col < COLUMNS; col++ {
 
 		for row := 0; row < ROWS; row++ {
@@ -81,13 +82,12 @@ func CheckTetrisMap(tetrisMap [ROWS][COLUMNS]rune,
 			if tetrisMap[row][col] == '#' {
 
 				(*checkList)[row][col] = true
-				//(*lengths)[col]-- //= row - 1
-				//break
 
 			} // if
 		} // inner for
 	} // outer for
 
+	// this one is for updating columns lengths
 	for col := 0; col < COLUMNS; col++ {
 
 		for row := 0; row < ROWS; row++ {
@@ -122,7 +122,7 @@ func MarkDoneLines(tetrisBooleanMap *[ROWS][COLUMNS]bool,
 			(*tetrisBooleanMap)[row][8] &&
 			(*tetrisBooleanMap)[row][9] {
 
-			// I fucked up here not gonna lie
+			// I fucked up here not gonna lie ;)
 			(*completedLines)[row] = true
 
 			// increase eliminated lines by one
@@ -214,30 +214,17 @@ func clearAboveLines(pa2cTetrisMap *[ROWS][COLUMNS]rune,
 	y := uBlock.Y
 
 	// draw equivalent empty block on the tetris map
-	for shapeRow := 0; shapeRow < 4; shapeRow++ {
+	for shapeRow := 0; shapeRow < y+uBlock.Height+2; shapeRow++ {
 
-		for shapeCol := 0; shapeCol < 4; shapeCol++ {
-			if y+shapeRow < ROWS && x+shapeCol < COLUMNS { // &&
-				//uBlock.Shape[shapeRow][shapeCol] == '#' {
+		for shapeCol := 0; shapeCol < COLUMNS; shapeCol++ {
+			if y+shapeRow < ROWS && x+shapeCol < COLUMNS {
 
-				(*pa2cTetrisMap)[y+shapeRow][x+shapeCol] = (uBlock).EqNone[shapeRow][shapeCol]
+				(*pa2cTetrisMap)[y+shapeRow][x+shapeCol] = '.'
 			}
 		} //
 
 	} //
 
-	/*
-		//
-		for y := 0; y < uBlock.Y+1; y++ {
-			for x := uBlock.X; x < uBlock.Width+uBlock.X; x++ {
-				//if uBlock.Y < Const.ROWS && uBlock.X+x < Const.COLUMNS { //&&
-				if uBlock.Y >= 0 && uBlock.X >= 0 {
-
-					(*pa2cTetrisMap)[y][x] = '.'
-				}
-			}
-		}
-	*/
 }
 
 func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,

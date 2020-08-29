@@ -2,10 +2,7 @@ package main
 
 // tetromino struct
 type Tetromino struct {
-	/*	CenterX int // center of the shape
-
-		CenterY int // center of the shape
-	*/Height int // space taken on Y axis
+	Height int // space taken on Y axis
 
 	Width int // space taken on X axis
 
@@ -17,9 +14,6 @@ type Tetromino struct {
 
 	Y int // Y axis
 
-	Rotation int // rotation * pi/2 rad
-
-	RotationsCounter int //
 }
 
 // private method to get equivalent none shape
@@ -35,6 +29,7 @@ func (tet *Tetromino) shiftToOriginalPlace() {
 		anYDist []int
 	)
 
+	// store shifted distances
 	for row := 0; row < 4; row++ {
 
 		for col := 0; col < 4; col++ {
@@ -48,28 +43,24 @@ func (tet *Tetromino) shiftToOriginalPlace() {
 
 		}
 	}
-
+	// set starting row & columns @ the original shape matrix to the minimum shifted distance
+	// minimum, since the center point of the shape is the most top left of it
 	var (
 		nStartingRow int = GetMinArrayElement(anYDist)
 		nStartingCol int = GetMinArrayElement(anXDist)
 	)
 
+	// the new shifted shape
 	var a2cNewShape [4][4]rune = (*tet).EqNone
 
-	var (
-		newRow int
-		newCol int
-	)
+	for newRow, row := 0, nStartingRow; row < (*tet).Height+nStartingRow; row++ {
 
-	for row := nStartingRow; row < (*tet).Height+nStartingRow; row++ {
-
-		for col := nStartingCol; col < (*tet).Width+nStartingCol; col++ {
+		for newCol, col := 0, nStartingCol; col < (*tet).Width+nStartingCol; col++ {
 
 			a2cNewShape[newRow][newCol] = (*tet).Shape[row][col]
 			newCol++
 		}
 
-		newCol = 0
 		newRow++
 
 	}
@@ -92,10 +83,10 @@ func (tet *Tetromino) Rotate90Degs() {
 	// ok let's start
 
 	// declare complex numbers needed for rotation
-	var Zprime, i, w complex128
+	var cxZprime, i, cxRotationPoint complex128
 	i = 0 + 1i
 	// rotate about center of the shape c(1,2)
-	w = 1 + 2i
+	cxRotationPoint = 1 + 2i
 
 	var newShape [4][4]rune
 
@@ -106,11 +97,11 @@ func (tet *Tetromino) Rotate90Degs() {
 
 		for col := 0.0; col < 4; col++ {
 
-			Z := complex(col, row)
-			Zprime = i*(Z-w) + w
+			cxZ := complex(col, row)
+			cxZprime = i*(cxZ-cxRotationPoint) + cxRotationPoint
 
-			x := int(real(Zprime))
-			y := int(imag(Zprime)) - 1
+			x := int(real(cxZprime))
+			y := int(imag(cxZprime)) - 1
 
 			if x >= 0 && y >= 0 && tet.Shape[y][x] == '#' {
 				newShape[int(row)][int(col)] = tet.Shape[y][x]
@@ -125,7 +116,7 @@ func (tet *Tetromino) Rotate90Degs() {
 	SwapInt(&tet.Height, &tet.Width)
 	// set the rotated shape
 	tet.Shape = newShape
-
+	// move shape to top left corner to avoid some problems :)
 	tet.shiftToOriginalPlace()
 
 }
@@ -146,8 +137,6 @@ func (_ Tetromino) CreateSquareShape() Tetromino {
 			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 		4,
-		0,
-		0,
 		0}
 
 }
@@ -169,8 +158,6 @@ func (_ Tetromino) CreateIShape() Tetromino {
 			{'.', '.', '.', '.'}},
 
 		4,
-		0,
-		0,
 		0}
 
 }
@@ -191,8 +178,6 @@ func (_ Tetromino) CreateSkewShape() Tetromino {
 			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 		4,
-		0,
-		0,
 		0}
 
 }
@@ -213,8 +198,6 @@ func (_ Tetromino) CreateSkewInverseShape() Tetromino {
 			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 		4,
-		0,
-		0,
 		0}
 
 }
@@ -235,8 +218,6 @@ func (_ Tetromino) CreateLShape() Tetromino {
 			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 		4,
-		0,
-		0,
 		0}
 
 }
@@ -257,8 +238,6 @@ func (_ Tetromino) CreateLInverseShape() Tetromino {
 			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 		4,
-		0,
-		0,
 		0}
 
 }
@@ -279,8 +258,6 @@ func (_ Tetromino) CreateTShape() Tetromino {
 			{'.', '.', '.', '.'},
 			{'.', '.', '.', '.'}},
 		4,
-		0,
-		0,
 		0}
 
 }
