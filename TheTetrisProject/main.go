@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/eiannone/keyboard"
@@ -105,12 +106,8 @@ func main() {
 		// restart loop to avoid overlapping if a shape hits the ground
 		if nCurrY >= 0 && a2bCheckList[nCurrY][nCurrX] {
 
-			// use the next tetromino
-			if nCurrTetromino >= 6 {
-				nCurrTetromino = 0
-			} else {
-				nCurrTetromino++
-			}
+			// use an another tetromino
+			nCurrTetromino = rand.Intn(7) + 0
 
 			puBlock.X = 4 // the middle of the tetris map
 			nCurrX = 4
