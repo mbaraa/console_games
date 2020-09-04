@@ -160,12 +160,16 @@ func MarkDoneLines(tetrisBooleanMap *[ROWS][COLUMNS]bool,
 func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
 	tetrisBooleanMap *[ROWS][COLUMNS]bool,
 	completedLines *[ROWS]bool,
-	columnsLengths *[COLUMNS]int) {
+	columnsLengths *[COLUMNS]int,
+	gameSpeed *float64) {
 
 	// look for completed(filled)
 	for row := 0; row < ROWS; row++ {
 
 		if (*completedLines)[row] {
+
+			// increase game speed
+			(*gameSpeed) -= 0.1
 
 			// set completion state to false
 			(*completedLines)[row] = false

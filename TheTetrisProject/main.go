@@ -84,6 +84,8 @@ func main() {
 	var bIsRotUsed bool = false
 	// game state boolean, well that's really obvious :)
 	var bGameOn bool = true
+	// game speed controller
+	var rGameSpeed float64 = 10.0
 
 	///////////////////////////////////////////////////////////////////////////
 	///////////////////////// game loop //////////////////////////////////////
@@ -123,7 +125,7 @@ func main() {
 		}()
 		*/
 		// pause the game so it won't go crazy fast
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * time.Duration(20*rGameSpeed))
 
 		// move left / right, rotate, and quit(pause in future) controls
 		// must be done parallel to the rest of the loop to avoid deadlocks
@@ -172,7 +174,8 @@ func main() {
 		Clear()
 		MarkDoneLines(&a2bCheckList, &abCompletedLines, &nLines)
 		EliminateLines(&a2cTetrisMainMap, &a2bCheckList,
-			&abCompletedLines, &anColsLengths)
+			&abCompletedLines, &anColsLengths,
+			&rGameSpeed)
 		UpdateTetrisMap(&a2cTetrisMainMap, &a2bCheckList)
 		PrintMatrix(a2cTetrisMainMap)
 		fmt.Printf("\n Lines: %d\n", nLines)
