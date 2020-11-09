@@ -2,17 +2,12 @@ package main
 
 // tetromino struct
 type Tetromino struct {
-	Height int // space taken on Y axis
-
-	Width int // space taken on X axis
-
-	Shape [4][4]rune // shape matrix
-
+	Height int        // space taken on Y axis
+	Width  int        // space taken on X axis
+	Shape  [4][4]rune // shape matrix
 	EqNone [4][4]rune // equivalent none shape matrix
-
-	X int // X axis
-
-	Y int // Y axis
+	X      int        // X axis
+	Y      int        // Y axis
 
 }
 

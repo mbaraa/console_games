@@ -8,44 +8,37 @@ import (
 
 // initialize lengths with row length - 1
 func InitLengths(lengths *[COLUMNS]int) {
-
 	for i := 0; i < COLUMNS; i++ {
 		(*lengths)[i] = ROWS - 1
-	} // for
+	}
 
-} // initLengths()
+}
 
 // initialize completed lines with falses(0)
 func InitCompletedLines(completedLines *[ROWS]bool) {
-
 	for i := 0; i < ROWS; i++ {
 		(*completedLines)[i] = false
-	} // for
+	}
 
-} // initCompletedLines()
+}
 
 // initialize tetris boolean map with falses(0)
 func InitCheckList(checkList *[ROWS][COLUMNS]bool) {
-
 	for row := 0; row < ROWS; row++ {
-
 		for col := 0; col < COLUMNS; col++ {
 			(*checkList)[row][col] = false
-		} // inner for
-	} // outer for
-} // initCheckList()
+		}
+	}
+}
 
 // initialize tetris map with dots
 func InitTetrisMap(tetrisMap *[ROWS][COLUMNS]rune) {
-
 	for row := 0; row < ROWS; row++ {
 		for col := 0; col < COLUMNS; col++ {
-
 			(*tetrisMap)[row][col] = '.'
-
-		} // inner for
-	} // outer for
-} // initTetrisMap()
+		}
+	}
+}
 
 // the other folks
 
@@ -54,56 +47,44 @@ func UpdateTetrisMap(tetrisMap *[ROWS][COLUMNS]rune,
 	checkList *[ROWS][COLUMNS]bool) {
 
 	for row := 0; row < ROWS; row++ {
-
 		for col := 0; col < COLUMNS; col++ {
-
 			if (*checkList)[row][col] {
 				(*tetrisMap)[row][col] = '#'
-			} // if
+			}
 
-		} // for
-	} // for
+		}
+	}
 
-} // updateTetrisMap()
+}
 
 // replace #s in tetris map with trues
 func CheckTetrisMap(tetrisMap [ROWS][COLUMNS]rune,
 	checkList *[ROWS][COLUMNS]bool,
 	lengths *[COLUMNS]int) {
 
-	/* reversed checker to prevent stacked areas,
-	 *   gone back to the original after having trouble with eliminateLines
-	 */
+	// reversed checker to prevent stacked areas,
+	// gone back to the original after having trouble with eliminateLines
+
 	// this one is for updating tetris boolean map
 	for col := 0; col < COLUMNS; col++ {
-
 		for row := 0; row < ROWS; row++ {
-
 			if tetrisMap[row][col] == '#' {
-
 				(*checkList)[row][col] = true
-
-			} // if
-		} // inner for
-	} // outer for
-
+			}
+		}
+	}
 	// this one is for updating columns lengths
 	for col := 0; col < COLUMNS; col++ {
-
 		for row := 0; row < ROWS; row++ {
-
 			if tetrisMap[row][col] == '#' {
-
 				(*lengths)[col] = row - 1
 				break
+			}
+		}
+	}
+}
 
-			} // if
-		} // inner for
-	} // outer for
-
-} // checkTetrisMap()
-
-// if line is copleted mark its place in the completedLines array
+// if line is completed mark its place in the completedLines array
 func MarkDoneLines(tetrisBooleanMap *[ROWS][COLUMNS]bool,
 	completedLines *[ROWS]bool,
 	eliminatedLines *int) {
@@ -128,33 +109,9 @@ func MarkDoneLines(tetrisBooleanMap *[ROWS][COLUMNS]bool,
 			// increase eliminated lines by one
 			(*eliminatedLines)++
 
-			/*for(int col = 0; col < COLUMNS; col++){
-			for col := 0; col < COLUMNS; col++ {
-
-			    if( tetrisBooleanMap[row][col] != 1 ) {
-			        break;
-			    }
-			    if( tetrisBooleanMap[row][9] == 1 ) {
-				// if a field is empty GTFOUH
-				if !tetrisBooleanMap[row][col] {
-					break
-				}
-				// if we reached here then the lines is complete
-				if tetrisBooleanMap[row][9] {
-					(*completedLines)[row] = true
-
-			    }
-					// increase eliminated lines by one
-					(*eliminatedLines)++
-				}
-
-			}*/
-			// inner for
-
-		} // crazy if
-	} // outer for
-
-} // markDoneLines
+		} // if
+	} // for
+}
 
 // eliminate completed lines and shift upper lines down
 func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
@@ -165,15 +122,11 @@ func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
 
 	// look for completed(filled)
 	for row := 0; row < ROWS; row++ {
-
 		if (*completedLines)[row] {
-
 			// increase game speed
 			(*gameSpeed) -= 0.1
-
 			// set completion state to false
 			(*completedLines)[row] = false
-
 			// reset line
 			for col := 0; col < COLUMNS; col++ {
 				(*tetrisMap)[row][col] = '.'
@@ -181,7 +134,7 @@ func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
 				// since there's an eleminated line so lengths are increased
 				(*columnsLengths)[col]++
 
-			} // inner for1
+			}
 
 			// shift rows down
 			// remeber we're going downnnn to up
@@ -192,14 +145,12 @@ func EliminateLines(tetrisMap *[ROWS][COLUMNS]rune,
 					(*tetrisMap)[rowEL][col] = (*tetrisMap)[rowEL-1][col]
 					(*tetrisBooleanMap)[rowEL][col] = (*tetrisBooleanMap)[rowEL-1][col]
 
-				} // inner inner for
-			} // inner for 2
-
+				} // inner for 2
+			} // inner for1
 		} // if
-
 	} // outer for
 
-} // eliminateLines()
+}
 
 //
 func PrintGameOver() {
@@ -209,7 +160,7 @@ func PrintGameOver() {
 	fmt.Println("GAME OVER !!!!")
 	fmt.Println(RESET)
 
-} // printGameOverAndGTFOH()
+}
 
 func clearAboveLines(pa2cTetrisMap *[ROWS][COLUMNS]rune,
 	uBlock Tetromino) {
@@ -250,23 +201,17 @@ func DropBlockOneRow(tetrisMap *[ROWS][COLUMNS]rune,
 			if *y+shapeRow < ROWS && *x+shapeCol < COLUMNS &&
 				block.Shape[shapeRow][shapeCol] == '#' {
 				(*tetrisMap)[*y+shapeRow][*x+shapeCol] = (*block).Shape[shapeRow][shapeCol]
-			}
-		} //
-
-	} //
-
-} // dropBlockOneRow()
+			} // if
+		} // inner for
+	} // outer for
+}
 
 func IsGameOver(anColsLengths [COLUMNS]int) bool {
-
 	for col := 0; col < COLUMNS; col++ {
-
 		if anColsLengths[col] == 0 {
 			return true
 		}
-
 	}
 
 	return false
-
 }
