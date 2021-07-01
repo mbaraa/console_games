@@ -1,2 +1,6 @@
-# go_progs
-Simple Go Programs
+# Console Games 
+
+### Includes
+
+- Tetris 
+- Tic-Tac-Toe
