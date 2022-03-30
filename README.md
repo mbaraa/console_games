@@ -4,3 +4,4 @@
 
 - Tetris 
 - Tic-Tac-Toe
+- Snake
