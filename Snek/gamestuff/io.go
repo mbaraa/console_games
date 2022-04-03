@@ -62,13 +62,13 @@ func getSpeed(level snakes.Level) int {
 	default:
 		fallthrough
 	case snakes.LevelNormal:
-		return 4
-	case snakes.LevelCrazy:
 		return 8
-	case snakes.LevelInsane:
+	case snakes.LevelCrazy:
 		return 16
-	case snakes.LevelSnek:
+	case snakes.LevelInsane:
 		return 32
+	case snakes.LevelSnek:
+		return 64
 	case snakes.LevelBerzerk:
 		return 128
 	}
@@ -100,7 +100,7 @@ func (g *GameIO) PrintStuff() {
 
 		g.plane.UnMark(o)
 		g.plane.Draw()
-		fmt.Printf("Score: %d\tLeft Apples: %d\n", g.score, g.apples-g.score)
+		fmt.Printf("Score: %d\tLeft Apples: %d\n", g.score, g.apples)
 		time.Sleep(time.Second / time.Duration(g.speed))
 	}
 }
@@ -110,17 +110,25 @@ func (g *GameIO) GetInput() {
 	for {
 		switch g.key {
 		case kb.KeyArrowUp:
-			g.lastMove = MoveUp
-			go g.sendPts(MoveUp)
+			if g.lastMove != MoveDown {
+				g.lastMove = MoveUp
+				go g.sendPts(MoveUp)
+			}
 		case kb.KeyArrowDown:
-			g.lastMove = MoveDown
-			go g.sendPts(MoveDown)
+			if g.lastMove != MoveUp {
+				g.lastMove = MoveDown
+				go g.sendPts(MoveDown)
+			}
 		case kb.KeyArrowRight:
-			g.lastMove = MoveRight
-			go g.sendPts(MoveRight)
+			if g.lastMove != MoveLeft {
+				g.lastMove = MoveRight
+				go g.sendPts(MoveRight)
+			}
 		case kb.KeyArrowLeft:
-			g.lastMove = MoveLeft
-			go g.sendPts(MoveLeft)
+			if g.lastMove != MoveRight {
+				g.lastMove = MoveLeft
+				go g.sendPts(MoveLeft)
+			}
 		}
 		_, g.key, err = kb.GetSingleKey()
 		if err != nil {
