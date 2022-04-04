@@ -12,23 +12,43 @@ func (c TermColor) StringColored(s string) string {
 	return string(c) + s + string(ColorReset)
 }
 
-type ColoredCell struct {
-	content string
-	color   TermColor
+type Cell interface {
+	Position() Point2
+	Name() string
+	Color() TermColor
+	Content() string
+	String() string
 }
 
-func NewCell(content string, color TermColor) ColoredCell {
-	return ColoredCell{
-		content: content,
-		color:   color,
+type ColoredCell struct {
+	name     string
+	content  string
+	color    TermColor
+	position Point2
+}
+
+func NewColoredCell(name, content string, color TermColor, position Point2) *ColoredCell {
+	return &ColoredCell{
+		name:     name,
+		content:  content,
+		color:    color,
+		position: position,
 	}
 }
 
-func (c ColoredCell) Content() string {
+func (c *ColoredCell) Position() Point2 {
+	return c.position
+}
+
+func (c *ColoredCell) Name() string {
+	return c.name
+}
+
+func (c *ColoredCell) Content() string {
 	return c.content
 }
 
-func (c ColoredCell) Color() TermColor {
+func (c *ColoredCell) Color() TermColor {
 	return c.color
 }
 

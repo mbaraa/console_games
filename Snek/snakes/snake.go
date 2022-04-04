@@ -5,6 +5,40 @@ import (
 	"snek/tui"
 )
 
+type SnakeCell struct {
+	position tui.Point2
+	content  string
+	color    tui.TermColor
+}
+
+func NewSnakeCell(content string, color tui.TermColor, position tui.Point2) *SnakeCell {
+	return &SnakeCell{
+		position: position,
+		color:    color,
+		content:  content,
+	}
+}
+
+func (s *SnakeCell) Position() tui.Point2 {
+	return s.position
+}
+
+func (s *SnakeCell) Name() string {
+	return "snake"
+}
+
+func (s *SnakeCell) Color() tui.TermColor {
+	return s.color
+}
+
+func (s *SnakeCell) Content() string {
+	return s.content
+}
+
+func (s *SnakeCell) String() string {
+	return s.color.StringColored(s.content)
+}
+
 type Snake struct {
 	nodes         *list.List
 	closeMoveChan func()
@@ -13,7 +47,11 @@ type Snake struct {
 
 func NewSnake(initialPosition tui.Point2) *Snake {
 	nodes := list.New()
-	nodes.PushBack(initialPosition)
+	nodes.PushBack(&SnakeCell{
+		position: initialPosition,
+		content:  "█",
+		color:    tui.ColorBoldGreen,
+	})
 
 	return &Snake{
 		nodes: nodes,
@@ -25,9 +63,15 @@ func (s *Snake) Len() int {
 }
 
 func (s *Snake) AddNode() *Snake {
-	p := s.nodes.Back().Value.(tui.Point2)
-	p.X--
-	s.nodes.PushBack(p)
+	c := s.nodes.Back().Value.(tui.Cell)
+	s.nodes.PushBack(&SnakeCell{
+		position: tui.Point2{
+			X: c.Position().X - 1,
+			Y: c.Position().Y,
+		},
+		content: "█",
+		color:   c.Color(),
+	})
 
 	return s
 }
@@ -40,22 +84,24 @@ func (s *Snake) CheckMove() bool {
 	return s.keepMoving
 }
 
-func (s *Snake) MoveY(steps int) (old, dst tui.Point2) {
-	dstPt := s.nodes.Front().Value.(tui.Point2)
+func (s *Snake) MoveY(steps int) (old, dst tui.Cell) {
+	dstCell := s.nodes.Front().Value.(tui.Cell)
+	dstPt := dstCell.Position()
 	dstPt.Y += steps
-	return s.move(dstPt)
+	return s.move(NewSnakeCell("█", dstCell.Color(), dstPt))
 }
 
-func (s *Snake) MoveX(steps int) (old, dst tui.Point2) {
-	dstPt := s.nodes.Front().Value.(tui.Point2)
+func (s *Snake) MoveX(steps int) (old, dst tui.Cell) {
+	dstCell := s.nodes.Front().Value.(tui.Cell)
+	dstPt := dstCell.Position()
 	dstPt.X += steps
-	return s.move(dstPt)
+	return s.move(NewSnakeCell("█", dstCell.Color(), dstPt))
 }
 
-func (s *Snake) move(p tui.Point2) (old, dst tui.Point2) {
-	s.nodes.PushFront(p)
+func (s *Snake) move(c tui.Cell) (old, dst tui.Cell) {
+	s.nodes.PushFront(c)
 	last := s.nodes.Back()
 	s.nodes.Remove(last)
 
-	return last.Value.(tui.Point2), p
+	return last.Value.(tui.Cell), c
 }

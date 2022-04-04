@@ -9,7 +9,7 @@ import (
 	kb "github.com/eiannone/keyboard"
 )
 
-type PtsFunc func() (old, dst tui.Point2)
+type CellsFunc func() (old, dst tui.Cell)
 
 type MoveDir uint
 
@@ -23,7 +23,7 @@ const (
 type GameIO struct {
 	plane         *tui.XYPlane
 	snake         *snakes.Snake
-	pts           chan PtsFunc
+	cells         chan CellsFunc
 	lastMove      MoveDir
 	score, apples int
 	speed         int
@@ -40,15 +40,22 @@ func NewGameIO(plane *tui.XYPlane, level snakes.Level) *GameIO {
 		snake.AddNode()
 	}
 
+	for n := snake.Nodes().Front(); ; n = n.Next() {
+		plane.Mark(n.Value.(tui.Cell))
+		if n.Next() == nil {
+			break
+		}
+	}
+
 	apples := snakes.GetApples(plane.MaxPoint(), level, tui.ColorBoldRed)
 	for _, apple := range apples {
-		plane.Mark(apple.Position, apple.Color)
+		plane.Mark(&apple)
 	}
 
 	return &GameIO{
 		plane:    plane,
 		snake:    snake,
-		pts:      make(chan PtsFunc),
+		cells:    make(chan CellsFunc),
 		score:    0,
 		apples:   len(apples),
 		speed:    getSpeed(level),
@@ -76,20 +83,20 @@ func getSpeed(level snakes.Level) int {
 
 func (g *GameIO) PrintStuff() {
 	for {
-		pp, ok := <-g.pts
+		getCells, ok := <-g.cells
 		if !ok {
 			continue
 		}
 
-		o, d := pp()
+		o, d := getCells()
 
-		if color, marked := g.plane.Marked(d); marked && color != tui.ColorBoldGreen {
+		if cell, marked := g.plane.Marked(d.Position()); marked && cell.Name() == "apple" {
 			g.snake.AddNode()
 			g.score++
 			g.apples--
 		}
 
-		err := g.plane.Mark(d, tui.ColorBoldGreen)
+		err := g.plane.Mark(d)
 		if err != nil || g.apples == 0 {
 			fmt.Printf("\033[H\033[2J%s\nScore: %d\n",
 				tui.ColorBoldRed.StringColored("Game Over!"),
@@ -145,7 +152,7 @@ func (g *GameIO) sendPts(currMove MoveDir) {
 		if g.lastMove != currMove {
 			return
 		}
-		var old, dst tui.Point2
+		var old, dst tui.Cell
 		switch currMove {
 		case MoveUp:
 			old, dst = g.snake.MoveY(1)
@@ -156,7 +163,7 @@ func (g *GameIO) sendPts(currMove MoveDir) {
 		case MoveLeft:
 			old, dst = g.snake.MoveX(-1)
 		}
-		g.pts <- func() (o, d tui.Point2) {
+		g.cells <- func() (o, d tui.Cell) {
 			return old, dst
 		}
 	}

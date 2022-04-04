@@ -7,9 +7,33 @@ import (
 )
 
 type Apple struct {
-	Position    tui.Point2
-	Color       tui.TermColor
-	GainedScore int
+	position    tui.Point2
+	color       tui.TermColor
+	gainedScore int
+}
+
+func NewApple(color tui.TermColor, score int, position tui.Point2) *Apple {
+	return &Apple{}
+}
+
+func (a *Apple) Position() tui.Point2 {
+	return a.position
+}
+
+func (a *Apple) Name() string {
+	return "apple"
+}
+
+func (a *Apple) Content() string {
+	return "█"
+}
+
+func (a *Apple) Color() tui.TermColor {
+	return a.color
+}
+
+func (a *Apple) String() string {
+	return a.color.StringColored(a.Content())
 }
 
 type Level uint
@@ -33,12 +57,12 @@ func GetApples(mxPt tui.Point2, level Level, color tui.TermColor) []Apple {
 	for i := uint(0); i < count; i++ {
 		rand.Seed(time.Now().UnixMicro())
 		apples[i] = Apple{
-			Color: color,
-			Position: tui.Point2{
+			color: color,
+			position: tui.Point2{
 				X: rand.Intn(end.X-start.X) + start.X,
 				Y: rand.Intn(end.Y-start.Y) + start.Y,
 			},
-			GainedScore: score,
+			gainedScore: score,
 		}
 	}
 

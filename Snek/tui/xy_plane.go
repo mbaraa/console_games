@@ -12,13 +12,15 @@ type Point2 struct {
 type XYPlane struct {
 	filled, empty string
 	maxPoint      Point2
-	cells         []ColoredCell
+	cells         []Cell
 }
 
 func NewXYPlane(maxPoint Point2, filled, empty string) *XYPlane {
-	cells := make([]ColoredCell, maxPoint.X*maxPoint.Y)
-	for i := range cells {
-		cells[i] = NewCell(empty, ColorReset)
+	cells := make([]Cell, maxPoint.X*maxPoint.Y)
+	for y := 0; y < maxPoint.Y; y++ {
+		for x := 0; x < maxPoint.X; x++ {
+			cells[y*maxPoint.X+x] = NewColoredCell("empty", empty, ColorReset, Point2{X: x, Y: y})
+		}
 	}
 
 	return &XYPlane{
@@ -39,7 +41,12 @@ func (p *XYPlane) String() string {
 
 	for row := p.maxPoint.Y - 1; row >= 0; row-- {
 		for col := 0; col < p.maxPoint.X; col++ {
-			sb.WriteString(p.cells[row*p.maxPoint.X+col].String())
+			currPoint := p.cells[row*p.maxPoint.X+col]
+			if currPoint != nil {
+				sb.WriteString(p.cells[row*p.maxPoint.X+col].String())
+			} else {
+				sb.WriteString(p.empty)
+			}
 		}
 		sb.WriteRune('\n')
 	}
@@ -47,28 +54,30 @@ func (p *XYPlane) String() string {
 	return sb.String()
 }
 
-func (p *XYPlane) Marked(_p Point2) (TermColor, bool) {
+func (p *XYPlane) Marked(_p Point2) (Cell, bool) {
 	if _p.X >= p.maxPoint.X || _p.Y >= p.maxPoint.Y || _p.X < 0 || _p.Y < 0 {
-		return ColorReset, false
+		return nil, false
 	}
 
 	cell := p.cells[_p.Y*p.maxPoint.X+_p.X]
 
-	return cell.Color(), cell.Content() != p.empty
-}
-
-func (p *XYPlane) Mark(_p Point2, color ...TermColor) error {
-	if len(color) != 0 {
-		return p.markPoint(_p, NewCell(p.filled, color[0]))
+	if cell == nil {
+		return nil, true
 	}
-	return p.markPoint(_p, NewCell(p.filled, ColorReset))
+
+	return cell, cell.Content() != p.empty
 }
 
-func (p *XYPlane) UnMark(_p Point2) error {
-	return p.markPoint(_p, NewCell(p.empty, ColorReset))
+func (p *XYPlane) Mark(cell Cell) error {
+	return p.markPoint(cell)
 }
 
-func (p *XYPlane) markPoint(_p Point2, cell ColoredCell) error {
+func (p *XYPlane) UnMark(cell Cell) error {
+	return p.markPoint(NewColoredCell("empty", p.empty, cell.Color(), cell.Position()))
+}
+
+func (p *XYPlane) markPoint(cell Cell) error {
+	_p := cell.Position()
 	if _p.X >= p.maxPoint.X || _p.Y >= p.maxPoint.Y {
 		return ErrPlaneOverflow
 	}
